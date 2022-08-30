@@ -1,10 +1,8 @@
 const express = require('express')
 const router = express.Router()
+const {signUpUser, loginUser} = require('../controllers/userControllers')
 
-router.post('/sign_up', async(req, res) => {
-    try {
-        
-    } catch (error) { res.status(500).send({message: error.message})}
-})
+router.post('/signup', signUpUser)
+router.post('/login', loginUser)
 
 module.exports = router
