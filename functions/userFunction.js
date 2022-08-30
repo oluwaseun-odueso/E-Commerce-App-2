@@ -1,7 +1,8 @@
 const {DataTypes} = require('sequelize')
 const userModel = require('../models/user')
 const bcrypt = require('bcrypt');
-const sequelize = require('../config/database')
+const sequelize = require('../config/database');
+const { response } = require('../app');
 const User = userModel(sequelize, DataTypes)
 
 async function createUser(first_name, last_name, email, phone_number, password, address, state, postal_code) {
@@ -37,15 +38,15 @@ async function checkPhoneNumber(phone_number) {
     }
 }
 
-async function getAUser (id) {
+async function getUserById(id) {
     try {
-        const user = await User.findOne({
-            attributes: { exclude: ['password'] },
-            where: { id }
-        })
-        return user
+        const details = await User.findOne({
+            attributes: {exclude: ['password']},
+            where: {id}
+        });
+        return details
     } catch (error) {
-        return error
+        return error   
     }
 }
 
@@ -59,7 +60,7 @@ async function hashUserPassword(password) {
     }
 }
 
-async function getDetailsByEmail(email) {
+async function getUserByEmail(email) {
     try {
         const result = await User.findOne({
             attributes: { exclude: ['password']},
@@ -72,17 +73,42 @@ async function getDetailsByEmail(email) {
     }
 }
 
-// getDetailsByEmail('tobi@gmail.com')
-//     .then(i => console.log(i))
-//     .catch(error => console.log(error))
+async function collectEmailHashedPassword(email) {
+    try {
+        const password = await User.findOne({
+            attributes: ['password'],
+            where: {email}
+        })
+        return password
+    } catch (error) {
+        return error
+    }
+}
+
+async function checkIfEnteredPasswordEqualsHashed(password, hashedPW) {
+    try {
+        const result = await bcrypt.compare(password, hashedPW)
+        return (result)
+    } catch (error) {
+        return error
+    }
+}
+
+function checkIfEntriesMatch(a, b) {
+    return a === b
+}
+
 
 const exportFunctions = {
     createUser,
-    getAUser, 
+    getUserById,
+    getUserByEmail,
     checkEmail, 
     checkPhoneNumber,
+    checkIfEntriesMatch,
     hashUserPassword,
-    getDetailsByEmail
+    collectEmailHashedPassword,
+    checkIfEnteredPasswordEqualsHashed
 }
 
 module.exports = exportFunctions
