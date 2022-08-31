@@ -91,6 +91,19 @@ const deleteAccount = async function(req, res) {
     } catch (error) { res.status(400).send({message: error.message}) }
 }
 
-const controllers = {signUpUser, loginUser, updateUserAccount, deleteAccount}
+const getAccount = async function (req, res) {
+    try {
+        const user = await getUserById(req.user.id)
+        if (! user) {         
+            res.status(400).send({message: "Cannot get account"})
+            return 
+        }
+        res.status(200).send({ user })
+    } catch (error) {
+        return error
+    }
+}
+
+const controllers = {signUpUser, loginUser, updateUserAccount, deleteAccount, getAccount}
 
 module.exports = controllers
