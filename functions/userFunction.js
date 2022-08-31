@@ -119,7 +119,18 @@ async function deleteUserAccount(id) {
     }
 }
 
-// deleteUserAccount(3)
+async function getAllUsers() {
+    try {
+        const allUsers = User.findAll({
+            attributes: { exclude: ['password'] }
+        });
+        return allUsers
+    } catch (error) {
+        return error
+    }
+}
+
+// getAllUsers()
 //     .then(i => console.log(i))
 //     .catch(error => console.log(error))
 
@@ -127,6 +138,7 @@ const exportFunctions = {
     createUser,
     getUserById,
     getUserByEmail,
+    getAllUsers,
     checkEmail, 
     checkPhoneNumber,
     checkIfEntriesMatch,

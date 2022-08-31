@@ -8,6 +8,7 @@ const {
     deleteUserAccount,
     getUserById, 
     getUserByEmail,
+    getAllUsers,
     collectEmailHashedPassword,
     updateAccountDetails,
     checkIfEnteredPasswordEqualsHashed
@@ -104,6 +105,19 @@ const getAccount = async function (req, res) {
     }
 }
 
-const controllers = {signUpUser, loginUser, updateUserAccount, deleteAccount, getAccount}
+const getAllAccounts = async function (res) {
+    try {
+        const users = await getAllUsers()
+        if (! users) {
+            res.status(200).send({message: 'No user found'})
+            return
+        }
+        res.status(400).send({users})
+    } catch (error) {
+        return error
+    }
+}
+
+const controllers = {signUpUser, loginUser, updateUserAccount, deleteAccount, getAccount, getAllAccounts}
 
 module.exports = controllers
