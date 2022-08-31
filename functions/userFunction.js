@@ -2,7 +2,6 @@ const {DataTypes} = require('sequelize')
 const userModel = require('../models/user')
 const bcrypt = require('bcrypt');
 const sequelize = require('../config/database');
-const { response } = require('../app');
 const User = userModel(sequelize, DataTypes)
 
 async function createUser(first_name, last_name, email, phone_number, password, address, state, postal_code) {
@@ -109,7 +108,18 @@ async function updateAccountDetails(id, first_name, last_name, email, phone_numb
     }
 }
 
-// updateAccountDetails(4, "Temitope", "Olaiya", "topeolaiya@gmail.com", "08088442255", "111, Abeokuta way", "Ekiti", "100278")
+async function deleteUserAccount(id) {
+    try {
+        const deleted = await User.destroy({
+            where: { id }
+        })
+        return deleted
+    } catch (error) {
+        return error
+    }
+}
+
+// deleteUserAccount(3)
 //     .then(i => console.log(i))
 //     .catch(error => console.log(error))
 
@@ -123,6 +133,7 @@ const exportFunctions = {
     hashUserPassword,
     collectEmailHashedPassword,
     updateAccountDetails,
+    deleteUserAccount,
     checkIfEnteredPasswordEqualsHashed
 }
 

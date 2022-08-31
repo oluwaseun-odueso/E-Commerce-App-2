@@ -5,6 +5,7 @@ const {
     checkPhoneNumber, 
     checkIfEntriesMatch,
     hashUserPassword,
+    deleteUserAccount,
     getUserById, 
     getUserByEmail,
     collectEmailHashedPassword,
@@ -63,13 +64,11 @@ const updateUserAccount = async function(req, res) {
         const {first_name, last_name, email, phone_number, address, state, postal_code} = req.body
         const user = await getUserById(req.user.id)
         try {
-            // If email exists in database and email is not user's existing email
             if ( await checkEmail (email) && ! checkIfEntriesMatch(user.email, email)) {
                 res.status(400).send({message: "Email already exists"})
                 return
             }
 
-            // If phone_number exists in database and phone_number is not user's existing phone_number
             if ( await checkPhoneNumber (phone_number) && ! checkIfEntriesMatch(user.phone_number, phone_number)) {
                 res.status(400).send({message: "Phone number already exists"})
                 return
@@ -82,6 +81,16 @@ const updateUserAccount = async function(req, res) {
     else res.status(400).send({ errno: "103", message: "Please enter all fields" })
 }
 
-const controllers = {signUpUser, loginUser, updateUserAccount}
+const deleteAccount = async function(req, res) {
+    try {
+        const deleteAcct = await deleteUserAccount(req.user.id)
+        if (deleteAcct) { res.status(200).send({message: "Account deleted!"})
+            return
+        }
+        res.status(400).send({message: "Account does not exist"})
+    } catch (error) { res.status(400).send({message: error.message}) }
+}
+
+const controllers = {signUpUser, loginUser, updateUserAccount, deleteAccount}
 
 module.exports = controllers
