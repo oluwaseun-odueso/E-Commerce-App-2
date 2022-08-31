@@ -98,6 +98,20 @@ function checkIfEntriesMatch(a, b) {
     return a === b
 }
 
+async function updateAccountDetails(id, first_name, last_name, email, phone_number, address, state, postal_code) {
+    try {
+        const updated = await User.update({first_name, last_name, email, phone_number, address, state, postal_code}, {
+            where: { id }
+        })
+        return updated
+    } catch (error) {
+        return error
+    }
+}
+
+// updateAccountDetails(4, "Temitope", "Olaiya", "topeolaiya@gmail.com", "08088442255", "111, Abeokuta way", "Ekiti", "100278")
+//     .then(i => console.log(i))
+//     .catch(error => console.log(error))
 
 const exportFunctions = {
     createUser,
@@ -108,6 +122,7 @@ const exportFunctions = {
     checkIfEntriesMatch,
     hashUserPassword,
     collectEmailHashedPassword,
+    updateAccountDetails,
     checkIfEnteredPasswordEqualsHashed
 }
 
