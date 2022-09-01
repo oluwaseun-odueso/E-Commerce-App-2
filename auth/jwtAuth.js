@@ -27,9 +27,25 @@ function verifyUserToken(req, res, next) {
     })
 }
 
+function verifySellerToken(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    if (token == null) return res.sendStatus(401)
+
+    jwt.verify(token, secret, function(err, seller) {
+        if (err) return res.status(403).send({
+            errno : 100,
+            message: "Token expired! please login again."
+        })
+        req.seller = seller
+        next()
+    })
+}
+
 const tokenFunctions = {
     generateToken,
     verifyUserToken,
+    verifySellerToken
 }
 
 module.exports = tokenFunctions

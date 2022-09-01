@@ -4,7 +4,9 @@ const {
     checkEmail, 
     checkPhoneNumber,
     getSellerByEmail, 
-    hashSellerPassword
+    hashSellerPassword,
+    collectEmailHashedPassword,
+    checkIfEnteredPasswordEqualsHashed
 } = require('../functions/sellerFunctions')
 
 const signupSeller = async (req, res) => {
@@ -25,6 +27,31 @@ const signupSeller = async (req, res) => {
     } else res.status(400).send({message: "Please enter all necessary fields"})
 }
 
-const controllers = {signupSeller}
+const loginSeller = async(req, res) => {
+    if (req.body.email && req.body.password) {
+        const {email, password} = req.body
+        try {
+            if ( ! await checkEmail(email)) { res.status(400).send({message: "Email does not exist"})
+                return
+            }
+            const hashedPassword = await collectEmailHashedPassword(email)
+            console.log(hashedPassword)
+            if (await checkIfEnteredPasswordEqualsHashed(password, hashedPassword.password) !== true) {res.status(400).send({message: "You have entered an incorrect password"})
+                return
+            }
+            const sellerDetails = await getSellerByEmail(email)
+            const seller = JSON.parse(JSON.stringify(sellerDetails))
+
+            const token = await generateToken(seller)
+            res.status(200).send({
+                message : "You have successfully logged in", 
+                seller, 
+                token
+            })
+        } catch (error) { res.status(400).send({message: error.message}) }
+    } else res.status(400).send({message: "Please enter all necessary fields"})
+}
+
+const controllers = {signupSeller, loginSeller}
 
 module.exports = controllers

@@ -48,7 +48,7 @@ const loginUser = async(req, res) => {
             }
             const userDetails = await getUserByEmail(email)
             const user = JSON.parse(JSON.stringify(userDetails))
-            
+
             const token = await generateToken(user)
             res.status(200).send({
                 message : "You have successfully logged in", 
@@ -91,7 +91,7 @@ const deleteAccount = async function(req, res) {
     } catch (error) { res.status(400).send({message: error.message}) }
 }
 
-const getAccount = async function (req, res) {
+const getUserAccount = async function (req, res) {
     try {
         const user = await getUserById(req.user.id)
         if (! user) {         
@@ -117,6 +117,6 @@ const getAllAccounts = async function (res) {
     }
 }
 
-const controllers = {signUpUser, loginUser, updateUserAccount, deleteAccount, getAccount, getAllAccounts}
+const controllers = {signUpUser, loginUser, updateUserAccount, deleteAccount, getUserAccount, getAllAccounts}
 
 module.exports = controllers
