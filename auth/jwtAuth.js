@@ -3,16 +3,16 @@ require('dotenv').config()
 
 const secret = process.env.PAYLOAD_SECRET
 
-function generateToken(user) {
+function generateToken(payload) {
     return new Promise((resolve, reject) => {
-        jwt.sign(user, secret, {expiresIn: '3m'}, function(error, token) {
+        jwt.sign(payload, secret, {expiresIn: '3m'}, function(error, token) {
             if (error) reject(error)
             resolve(token)
         })
     })
 }
 
-function verifyToken(req, res, next) {
+function verifyUserToken(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
     if (token == null) return res.sendStatus(401)
@@ -29,7 +29,7 @@ function verifyToken(req, res, next) {
 
 const tokenFunctions = {
     generateToken,
-    verifyToken
+    verifyUserToken,
 }
 
 module.exports = tokenFunctions

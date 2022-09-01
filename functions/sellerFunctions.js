@@ -1,0 +1,113 @@
+const {DataTypes} = require('sequelize')
+const sellerModel = require('../models/seller')
+const bcrypt = require('bcrypt')
+const sequelize = require('../config/database')
+const Seller = sellerModel(sequelize, DataTypes)
+
+async function createSeller(firstName, lastName, email, password, store_id, phone_number, address) {
+    try {
+        const sellerDetails = {firstName, lastName, email, password, store_id, phone_number, address}
+        const seller = await Seller.create(sellerDetails)
+        return seller
+    } catch (error) {
+        return error
+    }
+}
+
+// createSeller('Clara', 'Emman', 'clara@gmail.com', 'claraclare', 1, '09056833924', '13, Queens street, Great Britain')
+    // .then(i => console.log(i))
+//     .catch(error => console.log(error))
+
+async function checkEmail (email) {
+    try {
+        const emailCheck = await Seller.findOne({
+            where: { email }
+        })
+        return emailCheck ? true : false
+    } catch (error) {
+        return error
+    }
+}
+
+async function checkPhoneNumber(phone_number) {
+    try{
+        const phoneNumberCheck = await Seller.findOne({
+            where: { phone_number }
+        })
+        return phoneNumberCheck ? true : false
+    }
+    catch (error) {
+        return error
+    }
+}
+
+async function getSellerById(id) {
+    try {
+        const details = await Seller.findOne({
+            attributes: {exclude: ['password']},
+            where: {id}
+        });
+        return details
+    } catch (error) {
+        return error   
+    }
+}
+
+async function getSellerByEmail(email) {
+    try {
+        const result = await Seller.findOne({
+            attributes: { exclude: ['password']},
+            where: { email }
+          });
+
+        return result
+    } catch (error) {
+        return error
+    }
+}
+
+async function hashSellerPassword(password) {
+    try {
+        const saltRounds = 10;
+        const hash = await bcrypt.hash(password, saltRounds);   
+        return hash 
+    } catch (error) {
+        return error
+    }
+}
+
+async function collectEmailHashedPassword(email) {
+    try {
+        const password = await Seller.findOne({
+            attributes: ['password'],
+            where: {email}
+        })
+        return password
+    } catch (error) {
+        return error
+    }
+}
+
+async function checkIfEnteredPasswordEqualsHashed(password, hashedPW) {
+    try {
+        const result = await bcrypt.compare(password, hashedPW)
+        return (result)
+    } catch (error) {
+        return error
+    }
+}
+
+
+
+const exportFunctions = {
+    createSeller, 
+    checkEmail, 
+    checkPhoneNumber, 
+    getSellerById,
+    getSellerByEmail,
+    hashSellerPassword, 
+    collectEmailHashedPassword, 
+    checkIfEnteredPasswordEqualsHashed
+}
+
+module.exports = exportFunctions

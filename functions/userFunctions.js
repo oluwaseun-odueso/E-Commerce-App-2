@@ -6,8 +6,8 @@ const User = userModel(sequelize, DataTypes)
 
 async function createUser(first_name, last_name, email, phone_number, password, address, state, postal_code) {
     try {
-        const details = {first_name, last_name, email, phone_number, password, address, state, postal_code}
-        const user = await User.create(details)
+        const userDetails = {first_name, last_name, email, phone_number, password, address, state, postal_code}
+        const user = await User.create(userDetails)
         return user
     } catch (error) {
         return error

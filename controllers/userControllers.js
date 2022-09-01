@@ -12,7 +12,7 @@ const {
     collectEmailHashedPassword,
     updateAccountDetails,
     checkIfEnteredPasswordEqualsHashed
-} = require('../functions/userFunction')
+} = require('../functions/userFunctions')
 
 const signUpUser = async(req, res) => {
     if (req.body.first_name && req.body.last_name && req.body.email && req.body.phone_number && req.body.password && req.body.address && req.body.state && req.body.postal_code) {
@@ -48,9 +48,8 @@ const loginUser = async(req, res) => {
             }
             const userDetails = await getUserByEmail(email)
             const user = JSON.parse(JSON.stringify(userDetails))
-
+            
             const token = await generateToken(user)
-
             res.status(200).send({
                 message : "You have successfully logged in", 
                 user, 
