@@ -123,12 +123,24 @@ async function deleteSeller(id) {
     }
 }
 
+async function getAllSellers() {
+    try {
+        const allSellers = Seller.findAll({
+            attributes: { exclude: ['password'] }
+        });
+        return allSellers
+    } catch (error) {
+        return error
+    }
+}
+
 const exportFunctions = {
     createSeller, 
     checkEmail, 
     checkPhoneNumber, 
     getSellerById,
     getSellerByEmail,
+    getAllSellers,
     hashSellerPassword,
     deleteSeller,
     checkIfEntriesMatch, 

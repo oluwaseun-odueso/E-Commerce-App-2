@@ -61,10 +61,23 @@ const getSellerAccount = async function (req, res) {
     try {
         const seller = await getSellerById(req.seller.id)
         if (! seller) {         
-            res.status(400).send({message: "Cannot get account"})
+            res.status(400).send({message: "Cannot get seller's account"})
             return 
         }
         res.status(200).send({ seller })
+    } catch (error) {
+        return error
+    }
+}
+
+const getAllSellersAccounts = async function (res) {
+    try {
+        const sellers = await getAllSellers()
+        if (! sellers) {
+            res.status(200).send({message: 'No seller found'})
+            return
+        }
+        res.status(400).send({sellers})
     } catch (error) {
         return error
     }
@@ -101,6 +114,6 @@ const deleteSellerAccount = async(req, res) => {
     } catch (error) { res.status(400).send({message: error.message}) }
 }
 
-const controllers = {signupSeller, loginSeller, getSellerAccount, updateSellerAccount, deleteSellerAccount}
+const controllers = {signupSeller, loginSeller, getSellerAccount, updateSellerAccount, deleteSellerAccount, getAllSellersAccounts}
 
 module.exports = controllers
