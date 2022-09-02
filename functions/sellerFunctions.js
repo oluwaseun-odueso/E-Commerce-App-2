@@ -97,7 +97,20 @@ async function checkIfEnteredPasswordEqualsHashed(password, hashedPW) {
     }
 }
 
+async function updateSellerAccountDetails(id, firstName, lastName, email, store_id, phone_number, address) {
+    try {
+        const updated = await Seller.update({firstName, lastName, email, store_id, phone_number, address}, {
+            where: { id }
+        })
+        return updated
+    } catch (error) {
+        return error
+    }
+}
 
+function checkIfEntriesMatch(a, b) {
+    return a === b
+}
 
 const exportFunctions = {
     createSeller, 
@@ -105,8 +118,10 @@ const exportFunctions = {
     checkPhoneNumber, 
     getSellerById,
     getSellerByEmail,
-    hashSellerPassword, 
+    hashSellerPassword,
+    checkIfEntriesMatch, 
     collectEmailHashedPassword, 
+    updateSellerAccountDetails,
     checkIfEnteredPasswordEqualsHashed
 }
 

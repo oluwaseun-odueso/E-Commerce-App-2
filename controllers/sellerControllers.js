@@ -3,9 +3,13 @@ const {
     createSeller, 
     checkEmail, 
     checkPhoneNumber,
+    getSellerById,
     getSellerByEmail, 
+    deleteSellerccount,
     hashSellerPassword,
+    checkIfEntriesMatch,
     collectEmailHashedPassword,
+    updateSellerAccountDetails,
     checkIfEnteredPasswordEqualsHashed
 } = require('../functions/sellerFunctions')
 
@@ -52,6 +56,40 @@ const loginSeller = async(req, res) => {
     } else res.status(400).send({message: "Please enter all necessary fields"})
 }
 
-const controllers = {signupSeller, loginSeller}
+const getSellerAccount = async function (req, res) {
+    try {
+        const seller = await getSellerById(req.seller.id)
+        if (! seller) {         
+            res.status(400).send({message: "Cannot get account"})
+            return 
+        }
+        res.status(200).send({ seller })
+    } catch (error) {
+        return error
+    }
+}
+
+const updateSellerAccount = async (req, res) => {
+    if (req.body.firstName && req.body.lastName && req.body.email && req.body.store_id && req.body.address && req.body.phone_number) {
+        const {firstName, lastName, email, phone_number, address, store_id} = req.body
+        const seller = await getSellerById(req.seller.id)
+        try {
+            if ( await checkEmail (email) && ! checkIfEntriesMatch(seller.email, email)) {
+                res.status(400).send({message: "Email already exists"})
+                return
+            }
+            if ( await checkPhoneNumber (phone_number) && ! checkIfEntriesMatch(seller.phone_number, phone_number)) {
+                res.status(400).send({message: "Phone number already exists"})
+                return
+            }
+            await updateSellerAccountDetails(req.seller.id, firstName, lastName, email, store_id, phone_number, address)
+            const updated = await getSellerById(req.seller.id)
+            res.status(200).send({message: 'Account details updated', updated})
+        } catch (error) { res.status(400).send({message: error.message}) }
+    }
+    else res.status(400).send({ errno: "103", message: "Please enter all fields" })
+}
+
+const controllers = {signupSeller, loginSeller, getSellerAccount, updateSellerAccount}
 
 module.exports = controllers

@@ -68,7 +68,6 @@ const updateUserAccount = async function(req, res) {
                 res.status(400).send({message: "Email already exists"})
                 return
             }
-
             if ( await checkPhoneNumber (phone_number) && ! checkIfEntriesMatch(user.phone_number, phone_number)) {
                 res.status(400).send({message: "Phone number already exists"})
                 return
