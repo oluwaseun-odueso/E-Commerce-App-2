@@ -5,7 +5,8 @@ const {
     checkPhoneNumber,
     getSellerById,
     getSellerByEmail, 
-    deleteSellerccount,
+    getAllSellers,
+    deleteSeller,
     hashSellerPassword,
     checkIfEntriesMatch,
     collectEmailHashedPassword,
@@ -90,6 +91,16 @@ const updateSellerAccount = async (req, res) => {
     else res.status(400).send({ errno: "103", message: "Please enter all fields" })
 }
 
-const controllers = {signupSeller, loginSeller, getSellerAccount, updateSellerAccount}
+const deleteSellerAccount = async(req, res) => {
+    try {
+        const deleteAcct = await deleteSeller(req.seller.id)
+        if (deleteAcct) { res.status(200).send({message: "Account deleted!"})
+            return
+        }
+        res.status(400).send({message: "Account does not exist"})
+    } catch (error) { res.status(400).send({message: error.message}) }
+}
+
+const controllers = {signupSeller, loginSeller, getSellerAccount, updateSellerAccount, deleteSellerAccount}
 
 module.exports = controllers

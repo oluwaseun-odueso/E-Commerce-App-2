@@ -112,6 +112,17 @@ function checkIfEntriesMatch(a, b) {
     return a === b
 }
 
+async function deleteSeller(id) {
+    try {
+        const deleted = await Seller.destroy({
+            where: { id }
+        })
+        return deleted
+    } catch (error) {
+        return error
+    }
+}
+
 const exportFunctions = {
     createSeller, 
     checkEmail, 
@@ -119,6 +130,7 @@ const exportFunctions = {
     getSellerById,
     getSellerByEmail,
     hashSellerPassword,
+    deleteSeller,
     checkIfEntriesMatch, 
     collectEmailHashedPassword, 
     updateSellerAccountDetails,
