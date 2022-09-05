@@ -4,11 +4,13 @@ const {verifySellerToken} = require('../auth/jwtAuth')
 const {
     createStore, 
     getStore, 
-    updateStore
+    updateStore,
+    deleteStore
 } = require('../controllers/storeControllers.js')
 
 router.post('/create_store', verifySellerToken, createStore)
 router.get('/get_store/:id', verifySellerToken, getStore)
 router.put('/update_store_details/:id', verifySellerToken, updateStore)
+router.delete('/close_store/:id', verifySellerToken, deleteStore)
 
 module.exports = router
