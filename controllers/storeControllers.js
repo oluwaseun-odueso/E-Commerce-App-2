@@ -1,6 +1,7 @@
 const {
     createAStore,
     checkName,
+    getStoreById
 } = require('../functions/storeFunctions')
 
 const createStore = async(req, res) => {
@@ -16,6 +17,17 @@ const createStore = async(req, res) => {
     } else { res.status(400).json({ errno: "101", message: "Please enter all fields" }) }
 }
 
-const controllers = {createStore}
+const getStore = async(req, res) => {
+    try {
+        const store = await getStoreById(req.params.id, req.seller.id)
+        if ( ! store) {
+            res.status(400).send({ message: "Store does not exist" })
+            return
+        }
+        res.status(200).send({store})
+    } catch (error) { res.status(400).send({message: error.message}) }
+}
+
+const controllers = {createStore, getStore}
 
 module.exports = controllers

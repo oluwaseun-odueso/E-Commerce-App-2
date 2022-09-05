@@ -24,10 +24,10 @@ async function checkName(name) {
     }
 }
 
-async function getStoreById(id) {
+async function getStoreById(id, seller_id) {
     try {
         const store = await Store.findOne({
-            where: { id }
+            where: { id, seller_id }
         })
         return store
     } catch (error) {
