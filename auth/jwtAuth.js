@@ -5,7 +5,7 @@ const secret = process.env.PAYLOAD_SECRET
 
 function generateToken(payload) {
     return new Promise((resolve, reject) => {
-        jwt.sign(payload, secret, {expiresIn: '3m'}, function(error, token) {
+        jwt.sign(payload, secret, {expiresIn: '5m'}, function(error, token) {
             if (error) reject(error)
             resolve(token)
         })

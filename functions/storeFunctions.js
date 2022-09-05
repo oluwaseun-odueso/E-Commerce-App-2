@@ -35,10 +35,27 @@ async function getStoreById(id, seller_id) {
     }
 }
 
+async function updateStoreDetails(id, seller_id, name, address) {
+    try {
+        const updatedStore = await Store.update({name, address}, {
+            where: { id, seller_id }
+        })
+        return updatedStore
+    } catch (error) {
+        return error
+    }
+}
+
+function checkIfEntriesMatch (initialValue, newValue) {
+    return initialValue === newValue
+}
+
 const exportFunctions = {
     createAStore,
     checkName,
-    getStoreById
+    getStoreById,
+    updateStoreDetails,
+    checkIfEntriesMatch
 }
 
 module.exports = exportFunctions
