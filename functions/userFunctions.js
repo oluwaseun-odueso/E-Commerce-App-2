@@ -130,10 +130,6 @@ async function getAllUsers() {
     }
 }
 
-// getAllUsers()
-//     .then(i => console.log(i))
-//     .catch(error => console.log(error))
-
 const exportFunctions = {
     createUser,
     getUserById,

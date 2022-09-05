@@ -2,6 +2,7 @@ const {DataTypes} = require('sequelize')
 const sellerModel = require('../models/seller')
 const bcrypt = require('bcrypt')
 const sequelize = require('../config/database')
+const { get } = require('express/lib/response')
 const Seller = sellerModel(sequelize, DataTypes)
 
 async function createSeller(firstName, lastName, email, password, store_id, phone_number, address) {
@@ -13,10 +14,6 @@ async function createSeller(firstName, lastName, email, password, store_id, phon
         return error
     }
 }
-
-// createSeller('Clara', 'Emman', 'clara@gmail.com', 'claraclare', 1, '09056833924', '13, Queens street, Great Britain')
-    // .then(i => console.log(i))
-//     .catch(error => console.log(error))
 
 async function checkEmail (email) {
     try {
