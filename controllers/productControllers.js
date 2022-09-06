@@ -1,7 +1,8 @@
 const {getStoreID} = require('../functions/sellerFunctions')
 const {
     createProduct,
-    checkProductDescription
+    checkProductDescription,
+    getProductById
 } = require('../functions/productFunctions')
 
 const addProduct = async(req, res) => {
@@ -20,6 +21,17 @@ const addProduct = async(req, res) => {
     } else res.status(400).json({ errno: "101", message: "Please enter all fields" })
 }
 
-const productControllers = {addProduct}
+const getProduct = async(req, res) => {
+    try {
+        const product = await getProductById(req.params.id)
+        if ( ! product) {
+            res.status(400).send({ message: "Product does not exist" })
+            return
+        }
+        res.status(200).send({product})
+    } catch (error) {res.status(400).send({message: error.message})}
+}
+
+const productControllers = {addProduct, getProduct}
 
 module.exports = productControllers
