@@ -2,10 +2,11 @@ const {getStoreID} = require('../functions/sellerFunctions')
 const {
     createProduct,
     checkProductDescription,
-    getProductById
+    getProductById,
+    getProducts
 } = require('../functions/productFunctions')
 
-const addProduct = async(req, res) => {
+const addProduct = async (req, res) => {
     if (req.body.product_description && req.body.price && req.body.quantity_in_stock) {
         const {product_description, price, quantity_in_stock} = req.body
         try {
@@ -21,7 +22,7 @@ const addProduct = async(req, res) => {
     } else res.status(400).json({ errno: "101", message: "Please enter all fields" })
 }
 
-const getProduct = async(req, res) => {
+const getProduct = async (req, res) => {
     try {
         const product = await getProductById(req.params.id)
         if ( ! product) {
@@ -32,6 +33,17 @@ const getProduct = async(req, res) => {
     } catch (error) {res.status(400).send({message: error.message})}
 }
 
-const productControllers = {addProduct, getProduct}
+const getAllProducts = async (req, res) => {
+    try {
+        const products = await getProducts()
+        if (products == "") {
+            res.status(400).send({message: "There are no products available"})
+            return
+        }
+        res.status(200).send({message: "Available products", products})
+    } catch (error) {res.status(400).send({message: error.message})}
+}
+
+const productControllers = {addProduct, getProduct, getAllProducts}
 
 module.exports = productControllers

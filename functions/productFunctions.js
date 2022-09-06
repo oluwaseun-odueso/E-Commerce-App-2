@@ -35,10 +35,20 @@ async function getProductById(id) {
     }
 }
 
+async function getProducts() {
+    try {
+        const allProducts = await Product.findAll()
+        return allProducts
+    } catch (error) {
+        return error
+    }
+}
+
 const productRoutesFunctions = {   
     createProduct,
     checkProductDescription,
-    getProductById
+    getProductById,
+    getProducts
 }
 
 module.exports = productRoutesFunctions
