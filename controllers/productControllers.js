@@ -3,8 +3,10 @@ const {
     createProduct,
     checkProductDescription,
     getProductById,
-    getProducts
+    getProducts,
+    updateProductDetails
 } = require('../functions/productFunctions')
+const { checkIfEntriesMatch } = require('../functions/storeFunctions')
 
 const addProduct = async (req, res) => {
     if (req.body.product_description && req.body.price && req.body.quantity_in_stock) {
@@ -44,6 +46,26 @@ const getAllProducts = async (req, res) => {
     } catch (error) {res.status(400).send({message: error.message})}
 }
 
-const productControllers = {addProduct, getProduct, getAllProducts}
+const updateProduct = async (req, res) => {
+    if (req.body.product_description && req.body.price && req.body.quantity_in_stock) {
+        const {product_description, price, quantity_in_stock} = req.body
+        try {
+            const product = await getProductById(req.params.id)
+            if (! product ) {
+                res.status(400).send({message: "Product does not exist"})
+                return 
+            }
+            if (await checkProductDescription(product_description) && ! checkIfEntriesMatch(product.product_description, product_description)) {
+                res.status(400).send({message: "Product description already exists"})
+                return
+            }
+            await updateProductDetails(req.params.id, req.seller.id, product_description, price, quantity_in_stock)
+            const updated = await getProductById(req.params.id)
+            res.status(200).send({message: 'Product updated', updated}) 
+        } catch (error) {res.status(400).send({message: error.message})}
+    } else res.status(400).json({ errno: "101", message: "Please enter all fields" })
+}
+
+const productControllers = {addProduct, getProduct, getAllProducts, updateProduct}
 
 module.exports = productControllers

@@ -44,11 +44,23 @@ async function getProducts() {
     }
 }
 
+async function updateProductDetails(id, seller_id, product_description, price, quantity_in_stock) {
+    try {
+        const updateProduct = await Product.update({product_description, price, quantity_in_stock}, {
+            where: {id, seller_id}
+        })
+        return updateProduct
+    } catch (error) {
+        return error
+    }
+}
+
 const productRoutesFunctions = {   
     createProduct,
     checkProductDescription,
     getProductById,
-    getProducts
+    getProducts,
+    updateProductDetails
 }
 
 module.exports = productRoutesFunctions

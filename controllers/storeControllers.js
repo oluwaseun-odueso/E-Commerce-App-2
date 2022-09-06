@@ -41,9 +41,9 @@ const getStore = async(req, res) => {
 const updateStore = async(req, res) => {
     if ( req.body.name && req.body.address ) {
         const {name, address} = req.body
-        const store = await getStoreById(req.params.id, req.seller.id)
         try {
-            if (! store) {
+            const store = await getStoreById(req.params.id, req.seller.id)
+            if (! store ) {
                 res.status(400).send({message: "Store does not exist"})
                 return 
             }
@@ -54,7 +54,7 @@ const updateStore = async(req, res) => {
 
             await updateStoreDetails(req.params.id, req.seller.id, name, address)
             const updated = await getStoreById(req.params.id, req.seller.id)
-            res.status(200).send({message: 'Store details updated', updated}) 
+            res.status(200).send({message: 'Store updated', updated}) 
 
         } catch (error) { res.status(400).send({message: error.message}) }
     } else { res.status(400).json({ errno: "101", message: "Please enter all fields" }) }
@@ -67,7 +67,7 @@ const deleteStore = async(req, res) => {
             res.status(400).send({message: "Store does not exist"})
             return
         }
-        res.status(400).send({message: "Store closed"})
+        res.status(200).send({message: "Store closed"})
     } catch (error) { res.send({message : error.message}) }
 }
 
@@ -76,7 +76,7 @@ const getAllStores = async(req, res) => {
         const stores = await getStores(req.seller.id)
         console.log(stores)
         if (stores == "") {
-            res.status(400).send({message: "You have no store"})
+            res.status(200).send({message: "You have no store"})
             return
         }
         res.status(200).send({message: "Your stores", stores})
