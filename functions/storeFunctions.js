@@ -1,8 +1,6 @@
 const {DataTypes} = require('sequelize')
 const storeModel = require('../models/store')
 const sequelize = require('../config/database');
-const { response } = require('express');
-const { all } = require('../routes/user');
 const Store = storeModel(sequelize, DataTypes)
 
 async function createAStore(seller_id, name, address) {
@@ -15,7 +13,7 @@ async function createAStore(seller_id, name, address) {
     }
 }
 
-async function checkName(name) {
+async function checkStoreName(name) {
     try {
         const storeNameCheck = await Store.findOne({
             where: { name }
@@ -74,14 +72,26 @@ async function getStores(seller_id) {
     }
 }
 
-const exportFunctions = {
+async function checkIfSellerHasStore(seller_id) {
+    try {
+        const store = await Store.findOne({
+            where: {seller_id}
+        })
+        return store
+    } catch (error) {
+        return error
+    }
+}
+
+const storeRoutesFunctions = {
     createAStore,
-    checkName,
+    checkStoreName,
     getStoreById,
     updateStoreDetails,
     checkIfEntriesMatch,
     deleteAStore,
-    getStores
+    getStores,
+    checkIfSellerHasStore
 }
 
-module.exports = exportFunctions
+module.exports = storeRoutesFunctions

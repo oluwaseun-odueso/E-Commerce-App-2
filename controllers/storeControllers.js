@@ -1,19 +1,24 @@
 const {
     createAStore,
-    checkName,
+    checkStoreName,
     getStoreById,
     updateStoreDetails,
     checkIfEntriesMatch,
     deleteAStore,
-    getStores
+    getStores,
+    checkIfSellerHasStore
 } = require('../functions/storeFunctions')
-// const { checkIfEntriesMatch } = require('../functions/userFunctions')
 
 const createStore = async(req, res) => {
     if ( req.body.name && req.body.address ) {
         const {name, address} = req.body
         try {
-            if (await checkName(name)){ res.status(400).send({message: "Shop already exists"}) 
+            if (await checkIfSellerHasStore(req.seller.id)){
+                res.status(400).send({message: "Cannot create store, you already have a store"})
+                return
+            }
+            if (await checkStoreName(name)){ 
+                res.status(400).send({message: "Shop already exists"}) 
                 return
             }
             const store = await createAStore(req.seller.id, name, address)

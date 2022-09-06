@@ -130,7 +130,7 @@ async function getAllUsers() {
     }
 }
 
-const exportFunctions = {
+const userRoutesFunctions = {
     createUser,
     getUserById,
     getUserByEmail,
@@ -145,4 +145,4 @@ const exportFunctions = {
     checkIfEnteredPasswordEqualsHashed
 }
 
-module.exports = exportFunctions
+module.exports = userRoutesFunctions

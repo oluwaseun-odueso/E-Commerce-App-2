@@ -116,6 +116,6 @@ const getAllAccounts = async function (res) {
     }
 }
 
-const controllers = {signUpUser, loginUser, updateUserAccount, deleteAccount, getUserAccount, getAllAccounts}
+const userControllers = {signUpUser, loginUser, updateUserAccount, deleteAccount, getUserAccount, getAllAccounts}
 
-module.exports = controllers
+module.exports = userControllers

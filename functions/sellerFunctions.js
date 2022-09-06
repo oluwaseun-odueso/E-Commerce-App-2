@@ -2,7 +2,6 @@ const {DataTypes} = require('sequelize')
 const sellerModel = require('../models/seller')
 const bcrypt = require('bcrypt')
 const sequelize = require('../config/database')
-const { get } = require('express/lib/response')
 const Seller = sellerModel(sequelize, DataTypes)
 
 async function createSeller(firstName, lastName, email, password, store_id, phone_number, address) {
@@ -131,7 +130,19 @@ async function getAllSellers() {
     }
 }
 
-const exportFunctions = {
+async function getStoreID(id) {
+    try {
+        const storeID = Seller.findOne({
+            attributes: ['store_id'],
+            where: { id }
+        })
+        return storeID
+    } catch (error) {
+        return error
+    }
+}
+
+const sellerRoutesFunctions = {
     createSeller, 
     checkEmail, 
     checkPhoneNumber, 
@@ -143,7 +154,8 @@ const exportFunctions = {
     checkIfEntriesMatch, 
     collectEmailHashedPassword, 
     updateSellerAccountDetails,
-    checkIfEnteredPasswordEqualsHashed
+    checkIfEnteredPasswordEqualsHashed,
+    getStoreID
 }
 
-module.exports = exportFunctions
+module.exports = sellerRoutesFunctions
