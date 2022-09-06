@@ -2,6 +2,7 @@ const {DataTypes} = require('sequelize')
 const storeModel = require('../models/store')
 const sequelize = require('../config/database');
 const { response } = require('express');
+const { all } = require('../routes/user');
 const Store = storeModel(sequelize, DataTypes)
 
 async function createAStore(seller_id, name, address) {
@@ -62,13 +63,25 @@ async function deleteAStore(id, seller_id) {
     }
 }
 
+async function getStores(seller_id) {
+    try {
+        const allStores = await Store.findAll({
+            where: { seller_id }
+        })
+        return allStores
+    } catch (error) {
+        return error
+    }
+}
+
 const exportFunctions = {
     createAStore,
     checkName,
     getStoreById,
     updateStoreDetails,
     checkIfEntriesMatch,
-    deleteAStore
+    deleteAStore,
+    getStores
 }
 
 module.exports = exportFunctions

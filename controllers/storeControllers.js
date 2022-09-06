@@ -4,7 +4,8 @@ const {
     getStoreById,
     updateStoreDetails,
     checkIfEntriesMatch,
-    deleteAStore
+    deleteAStore,
+    getStores
 } = require('../functions/storeFunctions')
 // const { checkIfEntriesMatch } = require('../functions/userFunctions')
 
@@ -57,14 +58,26 @@ const updateStore = async(req, res) => {
 const deleteStore = async(req, res) => {
     try {
         const store = await deleteAStore(req.params.id, req.seller.id)
-        if (store) {
-            res.status(200).send({message: "Store has been closed"})
+        if ( ! store) {
+            res.status(400).send({message: "Store does not exist"})
             return
         }
-        res.status(400).send({message: "Store does not exist"})
+        res.status(400).send({message: "Store closed"})
     } catch (error) { res.send({message : error.message}) }
 }
 
-const controllers = {createStore, getStore, updateStore, deleteStore}
+const getAllStores = async(req, res) => {
+    try {
+        const stores = await getStores(req.seller.id)
+        console.log(stores)
+        if (stores == "") {
+            res.status(400).send({message: "You have no store"})
+            return
+        }
+        res.status(200).send({message: "Your stores", stores})
+    } catch (error) { res.send({message : error.message}) }
+}
+
+const controllers = {createStore, getStore, updateStore, deleteStore, getAllStores}
 
 module.exports = controllers
