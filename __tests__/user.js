@@ -187,3 +187,25 @@ describe('PUT /users/update_account', () => {
         expect(response.statusCode).toBe(400);
     })
 })
+
+describe('GET /user/get_account', () => {
+    test('Successful request to get account details', async () => {
+        const response = await request(app)
+        .get('/user/get_account')
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).not.toBe("User does not exist")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+})
+
+describe('DELETE /user/delete_account', () => {
+    test('Successfully delete a user', async () => {
+        const response = await request(app)
+        .delete('/user/delete_account')
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).toBe("Account deleted!")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+})
