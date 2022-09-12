@@ -12,7 +12,9 @@ beforeAll(async () => {
 
 describe("POST /users/signup", () => {
     test('Successful sign up, 201 status code when all fields are present', async() => {
-        const response = await request(app).post('/user/signup').send({
+        const response = await request(app)
+        .post('/user/signup')
+        .send({
             first_name: "Tomi",
             last_name: "Ade", 
             email: "tomi@gmail.com", 
@@ -26,8 +28,11 @@ describe("POST /users/signup", () => {
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
         expect(response.statusCode).toBe(201)
     })
+
     test('sign up with an existing email', async() => {
-        const response = await request(app).post('/user/signup').send({
+        const response = await request(app)
+        .post('/user/signup')
+        .send({
             first_name: "Tomi",
             last_name: "Ade", 
             email: "tomi@gmail.com", 
@@ -41,8 +46,11 @@ describe("POST /users/signup", () => {
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
         expect(response.statusCode).toBe(400)
     })
+
     test('sign up with an existing phone number', async() => {
-        const response = await request(app).post('/user/signup').send({
+        const response = await request(app)
+        .post('/user/signup')
+        .send({
             first_name: "Tomi",
             last_name: "Ade", 
             email: "tomi3@gmail.com", 
@@ -56,8 +64,11 @@ describe("POST /users/signup", () => {
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
         expect(response.statusCode).toBe(400)
     })
+
     test('When all fields are missing', async () => {
-        const response = await request(app).post('/user/signup').send({})        
+        const response = await request(app)
+        .post('/user/signup')
+        .send({})        
         expect(response.body.message).toBe("Please enter all fields")
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
         expect(response.statusCode).toBe(400);
@@ -66,7 +77,9 @@ describe("POST /users/signup", () => {
 
 describe('POST /users/login', () => {
     test('login request with valid login details', async() => {
-        const response = await request(app).post('/user/login').send({
+        const response = await request(app)
+        .post('/user/login')
+        .send({
             email: 'tomi@gmail.com',
             password: "tomi"
         })        
@@ -74,8 +87,11 @@ describe('POST /users/login', () => {
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
         expect(response.statusCode).toBe(200);
     })
+
     test('When user email does not exist', async () => {
-        const response = await request(app).post('/user/login').send({
+        const response = await request(app)
+        .post('/user/login')
+        .send({
             email: 'danielssumah@gmail.com',
             password: "Daniel"
         })        
@@ -83,8 +99,11 @@ describe('POST /users/login', () => {
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
         expect(response.statusCode).toBe(400);
     }) 
+
     test('When user password is incorrect', async () => {
-        const response = await request(app).post('/user/login').send({
+        const response = await request(app)
+        .post('/user/login')
+        .send({
             email: 'tomi@gmail.com',
             password: "Danielsko"
         })        
@@ -92,8 +111,77 @@ describe('POST /users/login', () => {
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
         expect(response.statusCode).toBe(400);
     })
-    test.only('When all fields are missing', async () => {
-        const response = await request(app).post('/user/login').send({})  
+
+    test('When all fields are missing', async () => {
+        const response = await request(app)
+        .post('/user/login')
+        .send({})  
+        expect(response.body.message).toBe("Please enter all fields")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));      
+        expect(response.statusCode).toBe(400);
+    })
+})
+
+describe('PUT /users/update_account', () => {
+    test('Update request with valid update details', async() => {
+        const response = await request(app)
+        .put('/user/update_account')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            first_name: "Tomike",
+            last_name: "Adeoye", 
+            email: "tomi@gmail.com", 
+            phone_number: "08052748510", 
+            address: "27, Dayo Shittu Street", 
+            state: "Lagos", 
+            postal_code: "100273"
+        })
+        expect(response.body.message).toBe("Account details updated")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+
+    test('Update request with existing email', async() => {
+        const response = await request(app)
+        .put('/user/update_account')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            first_name: "Tomike",
+            last_name: "Adeoye", 
+            email: "tomi2@gmail.com", 
+            phone_number: "08052748510", 
+            address: "27, Dayo Shittu Street", 
+            state: "Lagos", 
+            postal_code: "100273"
+        })
+        expect(response.body.message).toBe("Email already exists")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+
+    test('Update request with existing phone number', async() => {
+        const response = await request(app)
+        .put('/user/update_account')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            first_name: "Tomike",
+            last_name: "Adeoye", 
+            email: "tomi@gmail.com", 
+            phone_number: "08052748520", 
+            address: "27, Dayo Shittu Street", 
+            state: "Lagos", 
+            postal_code: "100273"
+        })
+        expect(response.body.message).toBe("Phone number already exists")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+
+    test('When all fields are missing', async () => {
+        const response = await request(app)
+        .put('/user/update_account')
+        .send({})  
+        .set('Authorization', `Bearer ${token}`)
         expect(response.body.message).toBe("Please enter all fields")
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));      
         expect(response.statusCode).toBe(400);
