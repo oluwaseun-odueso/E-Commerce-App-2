@@ -55,12 +55,24 @@ async function updateProductDetails(id, seller_id, product_description, price, q
     }
 }
 
+async function deleteAProduct(id, seller_id) {
+    try {
+        const deleted = await Product.destroy({
+            where: { id, seller_id }
+        })
+        return deleted
+    } catch (error) {
+        return error   
+    }
+}
+
 const productRoutesFunctions = {   
     createProduct,
     checkProductDescription,
     getProductById,
     getProducts,
-    updateProductDetails
+    updateProductDetails,
+    deleteAProduct
 }
 
 module.exports = productRoutesFunctions

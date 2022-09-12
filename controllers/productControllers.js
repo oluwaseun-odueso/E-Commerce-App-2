@@ -1,10 +1,11 @@
-const {getStoreID} = require('../functions/sellerFunctions')
+const {getSellerStoreID} = require('../functions/sellerFunctions')
 const {
     createProduct,
     checkProductDescription,
     getProductById,
     getProducts,
-    updateProductDetails
+    updateProductDetails,
+    deleteAProduct
 } = require('../functions/productFunctions')
 const { checkIfEntriesMatch } = require('../functions/storeFunctions')
 
@@ -12,7 +13,7 @@ const addProduct = async (req, res) => {
     if (req.body.product_description && req.body.price && req.body.quantity_in_stock) {
         const {product_description, price, quantity_in_stock} = req.body
         try {
-            const storeId = await getStoreID(req.seller.id)
+            const storeId = await getSellerStoreID(req.seller.id)
             const store_id = JSON.parse(JSON.stringify(storeId)).store_id
             if (await checkProductDescription(product_description)) {
                 res.status(400).send({message: "Product name already exists"}) 
@@ -66,6 +67,17 @@ const updateProduct = async (req, res) => {
     } else res.status(400).json({ errno: "101", message: "Please enter all fields" })
 }
 
-const productControllers = {addProduct, getProduct, getAllProducts, updateProduct}
+const deleteProduct = async (req, res) => {
+    try {
+        const productToBeDeleted = await getProductById(req.params.id, req.seller.id)
+        if ( ! productToBeDeleted) {
+            res.status(400).send({message: 'Product does not exist'})
+        }
+        await deleteAProduct(req.params.id)
+            res.status(200).send({message: "Store closed"})
+    } catch (error) { res.status(400).send({message: error.message}) }
+}
+
+const productControllers = {addProduct, getProduct, getAllProducts, updateProduct, deleteProduct}
 
 module.exports = productControllers

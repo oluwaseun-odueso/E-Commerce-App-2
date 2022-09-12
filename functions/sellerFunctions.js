@@ -130,7 +130,7 @@ async function getAllSellers() {
     }
 }
 
-async function getStoreID(id) {
+async function getSellerStoreID(id) {
     try {
         const storeID = Seller.findOne({
             attributes: ['store_id'],
@@ -155,7 +155,7 @@ const sellerRoutesFunctions = {
     collectEmailHashedPassword, 
     updateSellerAccountDetails,
     checkIfEnteredPasswordEqualsHashed,
-    getStoreID
+    getSellerStoreID
 }
 
 module.exports = sellerRoutesFunctions
