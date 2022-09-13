@@ -73,8 +73,8 @@ const deleteProduct = async (req, res) => {
         if ( ! productToBeDeleted) {
             res.status(400).send({message: 'Product does not exist'})
         }
-        await deleteAProduct(req.params.id)
-            res.status(200).send({message: "Store closed"})
+        await deleteAProduct(req.params.id, req.seller.id)
+        res.status(200).send({message: "Product deleted"})
     } catch (error) { res.status(400).send({message: error.message}) }
 }
 

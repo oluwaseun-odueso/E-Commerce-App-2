@@ -4,7 +4,8 @@
     "verbose": true,
     "modulePathIgnorePatterns": [
       "user.js",
-      "seller.js"
+      "seller.js",
+      "store.js"
     ]
   },
   "version": "1.0.0",
