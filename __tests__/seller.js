@@ -183,3 +183,14 @@ describe('PUT /seller/update_account', () => {
         expect(response.statusCode).toBe(400);
     })
 })
+    
+describe('GET /seller/get_account', () => {
+    test('Get a seller', async () => {
+        const response = await request(app)
+        .get('/seller/get_account')
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).not.toBe("Cannot get seller's account")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+})
