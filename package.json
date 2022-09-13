@@ -3,7 +3,8 @@
   "jest": {
     "verbose": true,
     "modulePathIgnorePatterns": [
-      "user.js"
+      "user.js",
+      "seller.js"
     ]
   },
   "version": "1.0.0",

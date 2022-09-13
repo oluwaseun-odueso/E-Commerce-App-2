@@ -173,7 +173,7 @@ describe('PUT /seller/update_account', () => {
         expect(response.statusCode).toBe(400);
     })
 
-    test('Login request with empty fields', async() => {
+    test('Update request with empty fields', async() => {
         const response = await request(app)
         .put('/seller/update_account')
         .set('Authorization', `Bearer ${token}`)
