@@ -44,7 +44,7 @@ describe('POST /store/create_store', () => {
         .post('/store/create_store')
         .set('Authorization', `Bearer ${token}`)
         .send({
-            name: "Jumpsuit store", 
+            name: "Tambo Wristwatches and Clocks", 
             address: "Block A. Balogun Market, Lagos, Island, Lagos"
         })
         expect(response.body.message).toBe("Shop already exists")
@@ -109,6 +109,37 @@ describe('PUT /store/update_store_details/:id', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({})        
         expect(response.body.message).toBe("Please enter all fields")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+})
+  
+describe('GET /store/get_account/:id', () => {
+    test('Get a seller', async () => {
+        const response = await request(app)
+        .get(`/store/get_store/${6}`)
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).not.toBe("Store does not exist")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+})
+
+describe('DELETE /store/close_store/:id', () => {
+    test('Successfully close a store', async () => {
+        const response = await request(app)
+        .delete(`/store/close_store/${6}`)
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).toBe("Store closed")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+
+    test('Successfully close a store', async () => {
+        const response = await request(app)
+        .delete(`/store/close_store/${6}`)
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).toBe("Store does not exist")
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
         expect(response.statusCode).toBe(400);
     })

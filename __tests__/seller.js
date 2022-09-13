@@ -204,4 +204,13 @@ describe('DELETE /seller/delete_account', () => {
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
         expect(response.statusCode).toBe(200);
     })
+
+    test('Successfully delete a user', async () => {
+        const response = await request(app)
+        .delete('/seller/delete_account')
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).not.toBe("Account does not exist")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
 })
