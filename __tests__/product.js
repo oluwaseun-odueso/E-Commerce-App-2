@@ -55,7 +55,7 @@ describe('POST /product/add_product', () => {
 describe('DELETE /product/delete_product/:id', () => {
     test('Successfully delete a product', async () => {
         const response = await request(app)
-        .delete(`/product/delete_product/${13}`)
+        .delete(`/product/delete_product/${14}`)
         .set('Authorization', `Bearer ${token}`)
         expect(response.body.message).toBe("Product deleted")
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
@@ -93,7 +93,7 @@ describe('GET /product/get_all_products', () => {
         expect(response.statusCode).toBe(200);
     })
 
-    test('Get all products when there are no products', async () => {
+    test('Get all products when there are no products', async() => {
         const response = await request(app)
         .get('/product/get_all_products')
         .set('Authorization', `Bearer ${token}`)
@@ -103,3 +103,56 @@ describe('GET /product/get_all_products', () => {
     })
 })
   
+describe('PUT /product/update_product/:id', () => {
+    test('Update product with valid details', async() => {
+        const response = await request(app)
+        .put(`/product/update_product/${12}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            product_description: "Two-piece Red n White Jumpsuit", 
+            price: 9000, 
+            quantity_in_stock: 50
+        })  
+        expect(response.body.message).toBe("Product updated")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+
+    test('Update product with existing description', async() => {
+        const response = await request(app)
+        .put(`/product/update_product/${12}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            product_description: "Handkerchief", 
+            price: 9000, 
+            quantity_in_stock: 50
+        })  
+        expect(response.body.message).toBe("Product description already exists")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+
+    test('Update non-existent product', async() => {
+        const response = await request(app)
+        .put(`/product/update_product/${17}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            product_description: "Handkerchief", 
+            price: 9000, 
+            quantity_in_stock: 50
+        })  
+        expect(response.body.message).toBe("Product does not exist")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+
+    test.only('Update product with empty fields', async() => {
+        const response = await request(app)
+        .put(`/product/update_product/${12}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({})  
+        expect(response.body.message).toBe("Please enter all fields")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+})
