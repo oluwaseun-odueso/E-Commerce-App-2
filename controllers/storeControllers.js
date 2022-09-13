@@ -47,7 +47,7 @@ const updateStore = async(req, res) => {
                 res.status(400).send({message: "Store does not exist"})
                 return 
             }
-            if ( await checkName(name) && ! checkIfEntriesMatch(store.name, name)) {
+            if ( await checkStoreName(name) && ! checkIfEntriesMatch(store.name, name)) {
                 res.status(400).send({message: "Store name already exists"})
                 return
             }

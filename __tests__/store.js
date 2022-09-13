@@ -12,7 +12,7 @@ beforeAll(async () => {
     token = response.body.token;
   });
 
-describe('GET /store/create_store', () => {
+describe('POST /store/create_store', () => {
     test('Successfully add store', async() => {
         const response = await request(app)
         .post('/store/create_store')
@@ -55,6 +55,57 @@ describe('GET /store/create_store', () => {
     test('create store with empty fields', async() => {
         const response = await request(app)
         .post('/store/create_store')
+        .set('Authorization', `Bearer ${token}`)
+        .send({})        
+        expect(response.body.message).toBe("Please enter all fields")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+})
+
+describe('PUT /store/update_store_details/:id', () => {
+    test('Update store with valid details', async() => {
+        const response = await request(app)
+        .put(`/store/update_store_details/${6}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            name: "Jumpsuit store2", 
+            address: "Block A. Balogun Market, Lagos, Island, Lagos"
+        })        
+        expect(response.body.message).toBe("Store updated")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+
+    test('Update store that does not exist', async() => {
+        const response = await request(app)
+        .put(`/store/update_store_details/${10}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            name: "Jumpsuit store2", 
+            address: "Block A. Balogun Market, Lagos, Island, Lagos"
+        })        
+        expect(response.body.message).toBe("Store does not exist")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+
+    test('Update store with already existing name', async() => {
+        const response = await request(app)
+        .put(`/store/update_store_details/${6}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            name: "Tambo Wristwatches and Clocks", 
+            address: "Block A. Balogun Market, Lagos, Island, Lagos"
+        })        
+        expect(response.body.message).toBe("Store name already exists")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+
+    test('Update store with empty fields', async() => {
+        const response = await request(app)
+        .put(`/store/update_store_details/${6}`)
         .set('Authorization', `Bearer ${token}`)
         .send({})        
         expect(response.body.message).toBe("Please enter all fields")
