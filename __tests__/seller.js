@@ -194,3 +194,14 @@ describe('GET /seller/get_account', () => {
         expect(response.statusCode).toBe(200);
     })
 })
+
+describe('DELETE /seller/delete_account', () => {
+    test('Successfully delete a user', async () => {
+        const response = await request(app)
+        .delete('/seller/delete_account')
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).toBe("Account deleted!")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+})
