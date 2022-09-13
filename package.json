@@ -1,7 +1,13 @@
 {
   "name": "e-commerce-app",
+  "jest": {
+    "verbose": true,
+    "modulePathIgnorePatterns": [
+      "user.js"
+    ]
+  },
   "version": "1.0.0",
-  "description": "",
+  "description": "E-Commerce App",
   "main": "app.js",
   "scripts": {
     "start": "nodemon practice.js"

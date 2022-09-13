@@ -61,16 +61,16 @@ async function deleteAStore(id, seller_id) {
     }
 }
 
-async function getStores(seller_id) {
-    try {
-        const allStores = await Store.findAll({
-            where: { seller_id }
-        })
-        return allStores
-    } catch (error) {
-        return error
-    }
-}
+// async function getStores(seller_id) {
+//     try {
+//         const allStores = await Store.findAll({
+//             where: { seller_id }
+//         })
+//         return allStores
+//     } catch (error) {
+//         return error
+//     }
+// }
 
 async function checkIfSellerHasStore(seller_id) {
     try {
@@ -90,7 +90,7 @@ const storeRoutesFunctions = {
     updateStoreDetails,
     checkIfEntriesMatch,
     deleteAStore,
-    getStores,
+    // getStores,
     checkIfSellerHasStore
 }
 

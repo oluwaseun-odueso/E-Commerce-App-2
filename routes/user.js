@@ -1,8 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const {verifyUserToken} = require('../auth/jwtAuth')
-// const verifyAdmin = require('../auth/adminAuth')
-const {signUpUser, loginUser, updateUserAccount, deleteAccount, getUserAccount, getAllAccounts} = require('../controllers/userControllers')
+const {signUpUser, loginUser, updateUserAccount, deleteAccount, getUserAccount} = require('../controllers/userControllers')
 
 router.post('/signup', signUpUser)
 router.post('/login', loginUser)
