@@ -62,13 +62,24 @@ describe('DELETE /product/delete_product/:id', () => {
         expect(response.statusCode).toBe(200);
     })
 
-    test.only('Successfully delete a product', async () => {
+    test('Successfully delete a product', async () => {
         const response = await request(app)
         .delete(`/product/delete_product/${13}`)
         .set('Authorization', `Bearer ${token}`)
         expect(response.body.message).toBe("Product does not exist")
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
         expect(response.statusCode).toBe(400);
+    })
+})
+
+describe('GET /product/get_product', () => {
+    test('Get a product', async () => {
+        const response = await request(app)
+        .get(`/product/get_product/${12}`)
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).not.toBe("Product does not exist")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
     })
 })
   
