@@ -82,4 +82,24 @@ describe('GET /product/get_product', () => {
         expect(response.statusCode).toBe(200);
     })
 })
+
+describe('GET /product/get_all_products', () => {
+    test('Get all products', async () => {
+        const response = await request(app)
+        .get('/product/get_all_products')
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).toBe("Available products")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+
+    test('Get all products when there are no products', async () => {
+        const response = await request(app)
+        .get('/product/get_all_products')
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).not.toBe("There are no products available")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+})
   
