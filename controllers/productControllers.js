@@ -72,6 +72,7 @@ const deleteProduct = async (req, res) => {
         const productToBeDeleted = await getProductById(req.params.id, req.seller.id)
         if ( ! productToBeDeleted) {
             res.status(400).send({message: 'Product does not exist'})
+            return
         }
         await deleteAProduct(req.params.id, req.seller.id)
         res.status(200).send({message: "Product deleted"})
