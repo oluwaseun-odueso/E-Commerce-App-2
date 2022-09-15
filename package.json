@@ -1,11 +1,12 @@
 {
-  "name": "e-commerce-app",
+  "name": "E-Commerce-app",
   "jest": {
     "verbose": true,
     "modulePathIgnorePatterns": [
       "user.js",
       "seller.js",
-      "store.js"
+      "store.js",
+      "product.js"
     ]
   },
   "version": "1.0.0",
