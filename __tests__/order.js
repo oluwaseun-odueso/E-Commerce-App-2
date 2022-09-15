@@ -50,3 +50,23 @@ describe('POST /order/add_order', () => {
         expect(response.statusCode).toBe(400);
     })
 })
+
+describe('GET /order/get_order', () => {
+    test("Get user's order", async() => {
+        const response = await request(app)
+        .get('/order/get_order')
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).toBe("Your order")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+
+    test("Get user's order", async() => {
+        const response = await request(app)
+        .get('/order/get_order')
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).not.toBe("You dont have an order yet")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+})
