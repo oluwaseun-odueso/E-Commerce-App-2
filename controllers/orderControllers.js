@@ -1,7 +1,8 @@
 const {getProductById} = require('../functions/productFunctions')
 const {
     createOrder,
-    getOrder
+    getOrder,
+    deleteOrder
 } = require('../functions/orderFunctions')
 
 const addOrder = async(req, res) => {
@@ -24,16 +25,29 @@ const getUserOrder = async(req, res) => {
     try {
         const order = await getOrder(req.user.id)
         if (order == '') {
-            res.status(400).send({message: "You dont have an order yet"})
+            res.status(400).send({message: "You don't have an order"})
             return
         }
         res.status(200).send({message: "Your order", order})
     } catch (error) { res.status(400).send({message: error.message}) }
 }
 
+const deleteUserOrder = async(req, res) => {
+    try {
+        const order = await getOrder(req.user.id)
+        if (order == '') {
+            res.status(400).send({message: "You don't have an order"})
+            return
+        }
+        await deleteOrder(req.user.id)
+        res.status(200).send({message: "Your order has been deleted"})
+    } catch (error) { res.status(400).send({message: error.message}) }
+}
+
 const controllers = {
     addOrder,
-    getUserOrder
+    getUserOrder,
+    deleteUserOrder
 }
 
 module.exports = controllers
