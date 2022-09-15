@@ -20,8 +20,20 @@ const addOrder = async(req, res) => {
     } else res.status(400).json({ errno: "101", message: "Please enter all fields" })
 }
 
+const getUserOrder = async(req, res) => {
+    try {
+        const order = await getOrder(req.user.id)
+        if (order == '') {
+            res.status(400).send({message: "You dont have an order yet"})
+            return
+        }
+        res.status(200).send({message: "Your order", order})
+    } catch (error) { res.status(400).send({message: error.message}) }
+}
+
 const controllers = {
-    addOrder
+    addOrder,
+    getUserOrder
 }
 
 module.exports = controllers
