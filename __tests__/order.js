@@ -65,8 +65,28 @@ describe('GET /order/get_order', () => {
         const response = await request(app)
         .get('/order/get_order')
         .set('Authorization', `Bearer ${token}`)
-        expect(response.body.message).not.toBe("You dont have an order yet")
+        expect(response.body.message).not.toBe("You don't have an order")
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
         expect(response.statusCode).toBe(200);
+    })
+})
+
+describe('DELETE /order/delete_order', () => {
+    test('When user has no order', async() => {
+        const response = await request(app)
+        .delete('/order/delete_order')
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).toBe("You don't have an order")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+
+    test('When user has an order', async() => {
+        const response = await request(app)
+        .delete('/order/delete_order')
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.body.message).not.toBe("Your order has been deleted")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
     })
 })
