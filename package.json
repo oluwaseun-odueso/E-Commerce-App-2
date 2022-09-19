@@ -13,7 +13,7 @@
   "description": "E-Commerce App",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon practice.js"
+    "start": "nodemon app.js"
   },
   "author": "Oluwaseun",
   "license": "ISC",

@@ -35,6 +35,32 @@ async function getProductById(id) {
     }
 }
 
+async function checkIfProductsExist(productIdsArray) {
+    try {
+        for (let i = 0; i < productIdsArray.length; i++) {
+            const product = await getProductById(productIdsArray[i])
+            if (! product) {
+                return productIdsArray[i]
+            }
+        }    
+    } catch (error) {
+        return error
+    }
+}
+
+async function checkProductOrderQuantity(productIdsArray, productQuantityArray) {
+    try {
+        for (let i = 0; i < productQuantityArray.length; i++) {
+            const product = await getProductById(productIdsArray[i])
+            if (product.quantity_in_stock < productQuantityArray[i]) {
+                return [true, product.product_description]
+            }
+        }
+    } catch (error) {
+        return error
+    }
+}
+
 async function getProducts() {
     try {
         const allProducts = await Product.findAll()
@@ -72,7 +98,9 @@ const productRoutesFunctions = {
     getProductById,
     getProducts,
     updateProductDetails,
-    deleteAProduct
+    deleteAProduct,
+    checkIfProductsExist,
+    checkProductOrderQuantity
 }
 
 module.exports = productRoutesFunctions
