@@ -11,14 +11,20 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER
       },
-      product_id: {
+      product_ids: {
+        type: Sequelize.STRING
+      },
+      product_quantities: {
+        type: Sequelize.STRING
+      },
+      price: {
+        type: Sequelize.STRING
+      },
+      total: {
         type: Sequelize.INTEGER
       },
-      quantity: {
-        type: Sequelize.INTEGER
-      },
-      amount: {
-        type: Sequelize.INTEGER
+      payment_status: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

@@ -5,7 +5,7 @@ const {
     deleteOrder
 } = require('../functions/orderFunctions')
 
-const addOrder = async(req, res) => {
+const addUserOrder = async(req, res) => {
     if (req.body.product_id && req.body.quantity) {
         const {product_id, quantity} = req.body
         try {
@@ -45,7 +45,7 @@ const deleteUserOrder = async(req, res) => {
 }
 
 const controllers = {
-    addOrder,
+    addUserOrder,
     getUserOrder,
     deleteUserOrder
 }
