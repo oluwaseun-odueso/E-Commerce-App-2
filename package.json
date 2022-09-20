@@ -1,5 +1,5 @@
 {
-  "name": "E-Commerce-app",
+  "name": "e-commerce",
   "jest": {
     "verbose": true,
     "modulePathIgnorePatterns": [

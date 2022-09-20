@@ -6,7 +6,10 @@ const {
 const {
     createOrder,
     getOrder,
-    deleteOrder
+    deleteOrder,
+    getProductsPrices,
+    getPriceForQuantitiesOrdered,
+    getTotalPrice
 } = require('../functions/orderFunctions')
 
 
@@ -20,15 +23,22 @@ const addUserOrder = async(req, res) => {
                 return
             }
 
-            const productName = await checkProductOrderQuantity(product_ids, product_quantities)
-            if (productName[0] == true) {
-                res.status(400).send({message: `Less quantity in stock for product ${productName[1]}`})
+            const excess = await checkProductOrderQuantity(product_ids, product_quantities)
+            console.log(excess)
+            if (excess) {
+                console.log('a')
+
+                res.status(400).send({message: `Less quantity in stock for product ${excess}`})
                 return
             }
-            
-            await createOrder(req.user.id, product_ids, product_quantities, price, d3.sum(price), "not paid")
+
+            const individualPrice  = await getProductsPrices(product_ids)
+            const price = getPriceForQuantitiesOrdered(individualPrice, product_quantities)
+            const total = getTotalPrice(price)
+
+            await createOrder(req.user.id, product_ids, product_quantities, price, total, "not paid")
             const order = await getOrder(req.user.id)
-            res.status(201).send({message: "Product added to order", order})
+            res.status(201).send({message: "Order created", order})
 
         } catch (error) { res.status(400).send({message: error.message}) }
     } else res.status(400).json({ errno: "101", message: "Please enter all fields" })

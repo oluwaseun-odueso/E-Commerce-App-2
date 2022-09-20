@@ -38,28 +38,28 @@ async function deleteOrder(user_id) {
 
 async function getProductsPrices(product_ids) {
     try {
-        const prices = []
+        const productPrices = []
         for (let i = 0; i < product_ids.length; i++) {
             const product = await getProductById(product_ids[i])
-            prices.push(product.price)
+            productPrices.push(product.price)
         }
-        return prices
+        return productPrices
     } catch (error) {
         return error
     }
 }
 
-async function getPriceForQuantitiesOrdered(prices, quantities) {
+function getPriceForQuantitiesOrdered(productPrices, orderQuantities) {
     const priceArray = []
-    prices.forEach((num1, index) => {
-        const num2 = quantities[index];
+    productPrices.forEach((num1, index) => {
+        const num2 = orderQuantities[index];
         priceArray.push(num1 * num2)
     });
     return priceArray
 }
 
 function getTotalPrice(priceArray) {
-    const total = priceArray.reduce((a, b) => a + b, 0);
+    const total = priceArray.reduce((currentTotal, item) => item + currentTotal, 0);
     return total
 }
 

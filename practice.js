@@ -11,6 +11,6 @@ a.forEach((num1, index) => {
 });
 
 const priceArray = [100, 300, 100, 100]
-const total = priceArray.reduce((a, b) => a + b, 0)
+const total = priceArray.reduce((currentTotal, item) => item + currentTotal, 0)
 console.log(total)
 // console.log(b.reduce((a, b) => a + b, 0))
