@@ -14,9 +14,13 @@ async function createOrder(user_id, product_ids, product_quantities, price, tota
     }
 }
 
+// createOrder(4, [1, 2, 8].toString(), [8, 2, 5].toString(), [100, 150, 200].toString(), 450, "unpaid")
+//     .then(i => console.log(i))
+//     .catch(error => console.log(error))
+
 async function getOrder(user_id) {
     try {
-        const order = await Order.findAll({
+        const order = await Order.findOne({
             where: { user_id }
         })
         return order

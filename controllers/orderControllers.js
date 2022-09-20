@@ -24,11 +24,8 @@ const addUserOrder = async(req, res) => {
             }
 
             const excess = await checkProductOrderQuantity(product_ids, product_quantities)
-            console.log(excess)
             if (excess) {
-                console.log('a')
-
-                res.status(400).send({message: `Less quantity in stock for product ${excess}`})
+                res.status(400).send({message: `Order quantity higher than quantity in stock for product ${excess}`})
                 return
             }
 
@@ -36,7 +33,7 @@ const addUserOrder = async(req, res) => {
             const price = getPriceForQuantitiesOrdered(individualPrice, product_quantities)
             const total = getTotalPrice(price)
 
-            await createOrder(req.user.id, product_ids, product_quantities, price, total, "not paid")
+            await createOrder(req.user.id, JSON.stringify(product_ids), JSON.stringify(product_quantities), JSON.stringify(price), total, "not paid")
             const order = await getOrder(req.user.id)
             res.status(201).send({message: "Order created", order})
 
