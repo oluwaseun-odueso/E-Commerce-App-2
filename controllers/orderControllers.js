@@ -9,14 +9,19 @@ const {
     deleteOrder,
     getProductsPrices,
     getPriceForQuantitiesOrdered,
-    getTotalPrice
+    checkIfUserHasOrder,
+    getTotalPrice,
 } = require('../functions/orderFunctions')
-
 
 const addUserOrder = async(req, res) => {
     if (req.body.product_ids && req.body.product_quantities) {
         const {product_ids, product_quantities} = req.body
         try {
+            if (await checkIfUserHasOrder(req.user.id)) {
+                res.status(400).send({message: "Pay for or delete previous order to create a new one"})
+                return
+            }
+
             const returnId = await checkIfProductsExist(product_ids)
             if (returnId) {
                 res.status(400).send({message: `Product with id ${returnId} does not exist`})
@@ -33,7 +38,7 @@ const addUserOrder = async(req, res) => {
             const price = getPriceForQuantitiesOrdered(individualPrice, product_quantities)
             const total = getTotalPrice(price)
 
-            await createOrder(req.user.id, JSON.stringify(product_ids), JSON.stringify(product_quantities), JSON.stringify(price), total, "not paid")
+            await createOrder(req.user.id, product_ids.toString(), product_quantities.toString(), price.toString(), total, "not paid")
             const order = await getOrder(req.user.id)
             res.status(201).send({message: "Order created", order})
 

@@ -3,6 +3,7 @@ const orderModel = require('../models/order')
 const sequelize = require('../config/database')
 const {getProductById} = require('../functions/productFunctions')
 const Order = orderModel(sequelize, DataTypes)
+const {writeFile, readFile} = require('fs')
 
 async function createOrder(user_id, product_ids, product_quantities, price, total, payment_status) {
     try {
@@ -14,16 +15,36 @@ async function createOrder(user_id, product_ids, product_quantities, price, tota
     }
 }
 
-// createOrder(4, [1, 2, 8].toString(), [8, 2, 5].toString(), [100, 150, 200].toString(), 450, "unpaid")
-//     .then(i => console.log(i))
-//     .catch(error => console.log(error))
-
 async function getOrder(user_id) {
     try {
         const order = await Order.findOne({
             where: { user_id }
         })
         return order
+    } catch (error) {
+        return error
+    }
+}
+
+async function writeDataToFile(filename, data) {
+    try {
+        const stringedData = JSON.stringify(data)
+        writeFile(filename, stringedData, (err, data) => {
+            if (err) throw err
+        })
+    } catch (error) {
+        return error
+    }
+}
+
+async function ReadDataFromFile(filename) {
+    try {
+        readFile(filename, 'utf8', (err, data) => {
+            if (err) throw err;
+
+            const parsedData = JSON.parse(data)
+            return parsedData
+        })
     } catch (error) {
         return error
     }
@@ -67,13 +88,27 @@ function getTotalPrice(priceArray) {
     return total
 }
 
+async function checkIfUserHasOrder(user_id) {
+    try {
+        const order = await Order.findOne({
+            where: {user_id}
+        })
+        return order
+    } catch (error) {
+        return error
+    }
+}
+
 const orderRoutesFunctions = {
     createOrder,
     getOrder, 
     deleteOrder,
     getProductsPrices,
     getPriceForQuantitiesOrdered,
-    getTotalPrice
+    getTotalPrice,
+    writeDataToFile, 
+    ReadDataFromFile,
+    checkIfUserHasOrder
 }
 
 module.exports = orderRoutesFunctions

@@ -43,7 +43,6 @@ const loginUser = async(req, res) => {
                 return
             }
             const hashedPassword = await collectEmailHashedPassword(email)
-            console.log(hashedPassword)
             if (await checkIfEnteredPasswordEqualsHashed(password, hashedPassword.password) !== true) {
                 res.status(400).send({message: "You have entered an incorrect password"})
                 return
