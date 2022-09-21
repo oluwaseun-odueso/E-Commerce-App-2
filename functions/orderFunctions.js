@@ -3,7 +3,6 @@ const orderModel = require('../models/order')
 const sequelize = require('../config/database')
 const {getProductById} = require('../functions/productFunctions')
 const Order = orderModel(sequelize, DataTypes)
-const {writeFile, readFile} = require('fs')
 
 async function createOrder(user_id, product_ids, product_quantities, price, total, payment_status) {
     try {
@@ -21,30 +20,6 @@ async function getOrder(user_id) {
             where: { user_id }
         })
         return order
-    } catch (error) {
-        return error
-    }
-}
-
-async function writeDataToFile(filename, data) {
-    try {
-        const stringedData = JSON.stringify(data)
-        writeFile(filename, stringedData, (err, data) => {
-            if (err) throw err
-        })
-    } catch (error) {
-        return error
-    }
-}
-
-async function ReadDataFromFile(filename) {
-    try {
-        readFile(filename, 'utf8', (err, data) => {
-            if (err) throw err;
-
-            const parsedData = JSON.parse(data)
-            return parsedData
-        })
     } catch (error) {
         return error
     }
@@ -106,8 +81,6 @@ const orderRoutesFunctions = {
     getProductsPrices,
     getPriceForQuantitiesOrdered,
     getTotalPrice,
-    writeDataToFile, 
-    ReadDataFromFile,
     checkIfUserHasOrder
 }
 

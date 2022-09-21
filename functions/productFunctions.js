@@ -52,10 +52,11 @@ async function checkProductOrderQuantity(productIdsArray, productQuantityArray) 
     try {
         for (let i = 0; i < productIdsArray.length; i++) {
             const product = await getProductById(productIdsArray[i])
+            console.log(product.quantity_in_stock)
             if (product.quantity_in_stock < productQuantityArray[i]) {
                 return product.product_description
             }
-            else return false
+            // else return false
         }
     } catch (error) {
         return error

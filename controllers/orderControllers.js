@@ -29,8 +29,9 @@ const addUserOrder = async(req, res) => {
             }
 
             const excess = await checkProductOrderQuantity(product_ids, product_quantities)
+            console.log(excess)
             if (excess) {
-                res.status(400).send({message: `Order quantity higher than quantity in stock for product ${excess}`})
+                res.status(400).send({message: `${excess} order quantity higher than quantity in stock`})
                 return
             }
 
