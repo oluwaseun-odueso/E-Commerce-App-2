@@ -4,13 +4,16 @@ const {
     checkProductOrderQuantity
 } = require('../functions/productFunctions')
 const {
-    createOrder,
     getOrder,
+    createOrder,
     deleteOrder,
-    getProductsPrices,
-    getPriceForQuantitiesOrdered,
-    checkIfUserHasOrder,
     getTotalPrice,
+    getProductsPrices,
+    checkIfUserHasOrder,
+    getProductIdsForUserOrder,
+    checkIfIdsExistsInUserOrder,
+    getPriceForQuantitiesOrdered,
+    convertProductIdsFromDatabaseToArray
 } = require('../functions/orderFunctions')
 
 const addUserOrder = async(req, res) => {
@@ -28,10 +31,10 @@ const addUserOrder = async(req, res) => {
                 return
             }
 
-            const excess = await checkProductOrderQuantity(product_ids, product_quantities)
+            const excessItem = await checkProductOrderQuantity(product_ids, product_quantities)
             console.log(excess)
-            if (excess) {
-                res.status(400).send({message: `${excess} order quantity higher than quantity in stock`})
+            if (excessItem) {
+                res.status(400).send({message: `${excessItem} order quantity higher than quantity in stock`})
                 return
             }
 
@@ -47,21 +50,13 @@ const addUserOrder = async(req, res) => {
     } else res.status(400).json({ errno: "101", message: "Please enter all fields" })
 }
 
-// const addUserOrder = async(req, res) => {
-//     if (req.body.product_id && req.body.quantity) {
-//         const {product_id, quantity} = req.body
-//         try {
-//             const product = await getProductById(product_id)
-            // if (! product) {
-            //     res.status(400).send({message: "Product does not exist"})
-            //     return
-            // }
-            // await createOrder(req.user.id, product_id, quantity, product.price * quantity)
-            // const order = await getOrder(req.user.id)
-            // res.status(201).send({message: "Product added to order", order})
-//         } catch (error) { res.status(400).send({message: error.message}) }
-//     } else res.status(400).json({ errno: "101", message: "Please enter all fields" })
-// }
+const updateOrderProduct = async(req, res) => {
+    if (req.body.product_ids && req.body.product_quantities) {
+        try {
+        
+        } catch (error) { res.status(400).send({message: error.message}) }
+    } else res.status(400).json({ errno: "101", message: "Please enter all fields" })
+}
 
 const getUserOrder = async(req, res) => {
     try {
@@ -86,10 +81,30 @@ const deleteUserOrder = async(req, res) => {
     } catch (error) { res.status(400).send({message: error.message}) }
 }
 
+const deleteProductFromOrder = async(req, res) => {
+    if (req.body.product_ids) {
+        const {product_ids} = req.body
+        try {
+            const currentIds = await getProductIdsForUserOrder(req.user.id)
+            const currentIdsArray = convertProductIdsFromDatabaseToArray(currentIds)
+            const notExistingId = checkIfIdsExistsInUserOrder(product_ids, currentIdsArray)
+
+            if (notExistingId) {
+                res.status(400).send({messsage: `Product with id ${notExistingId} doesn't exist in order`})
+                return
+            }
+
+        } catch (error) { res.status(400).send({message: error.message}) }
+    }
+    else res.status(400).send({message: "Enter product(s) to delete"})
+}
+
 const controllers = {
     addUserOrder,
     getUserOrder,
-    deleteUserOrder
+    deleteUserOrder,
+    updateOrderProduct,
+    deleteProductFromOrder
 }
 
 module.exports = controllers

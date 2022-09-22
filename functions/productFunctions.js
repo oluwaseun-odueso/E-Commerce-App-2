@@ -56,7 +56,6 @@ async function checkProductOrderQuantity(productIdsArray, productQuantityArray) 
             if (product.quantity_in_stock < productQuantityArray[i]) {
                 return product.product_description
             }
-            // else return false
         }
     } catch (error) {
         return error

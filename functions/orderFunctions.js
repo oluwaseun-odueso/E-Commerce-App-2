@@ -63,6 +63,36 @@ function getTotalPrice(priceArray) {
     return total
 }
 
+async function getProductIdsForUserOrder(user_id) {
+    try {
+        const ids = await Order.findOne({
+            attributes: ['product_ids'],
+            where: {user_id}
+        })
+        return ids.product_ids
+    } catch (error) {
+        return error
+    }
+}
+
+function convertProductIdsFromDatabaseToArray(ids) {
+    const idArray = ids.split`,`.map(x=>+x)
+    return idArray
+}
+
+// function checkIfIdsExistsInUserOrder(deleteProductIds, currentIds) {
+//     console.log(deleteProductIds.every(item => currentIds.includes(item)))
+//     return deleteProductIds.every(item => currentIds.includes(item))
+// }
+
+function checkIfIdsExistsInUserOrder(deleteProductIds, currentIds) {
+    for (let i = 0; i < deleteProductIds.length; i++) {
+        if (!currentIds.includes(deleteProductIds[i])) {
+            return deleteProductIds[i]
+        }
+    }
+}
+
 async function checkIfUserHasOrder(user_id) {
     try {
         const order = await Order.findOne({
@@ -80,8 +110,11 @@ const orderRoutesFunctions = {
     deleteOrder,
     getProductsPrices,
     getPriceForQuantitiesOrdered,
+    getProductIdsForUserOrder,
     getTotalPrice,
-    checkIfUserHasOrder
+    checkIfUserHasOrder,
+    checkIfIdsExistsInUserOrder,
+    convertProductIdsFromDatabaseToArray
 }
 
 module.exports = orderRoutesFunctions
