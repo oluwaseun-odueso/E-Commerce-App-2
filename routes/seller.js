@@ -1,7 +1,14 @@
 const express = require('express')
 const router = express.Router()
 const {verifySellerToken} = require('../auth/jwtAuth')
-const {signupSeller, loginSeller, getSellerAccount, updateSellerAccount, deleteSellerAccount, getAllSellersAccounts} = require('../controllers/sellerControllers')
+const {
+    signupSeller, 
+    loginSeller, 
+    getSellerAccount, 
+    updateSellerAccount, 
+    deleteSellerAccount, 
+    getAllSellersAccounts
+} = require('../controllers/sellerController')
 
 router.post('/signup', signupSeller)
 router.post('/login', loginSeller)

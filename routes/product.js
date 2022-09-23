@@ -7,7 +7,7 @@ const {
     getAllProducts, 
     updateProduct,
     deleteProduct
-} = require('../controllers/productControllers')
+} = require('../controllers/productController')
 
 router.post('/add_product', verifySellerToken, addProduct)
 router.get('/get_product/:id', getProduct)

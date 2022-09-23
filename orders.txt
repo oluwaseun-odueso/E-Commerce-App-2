@@ -1,1 +1,0 @@
-{"id":29,"user_id":4,"product_ids":"1,2,8,12","product_quantities":"2,2,1,1","price":"1000,500,2500,9000","total":13000,"payment_status":"not paid","createdAt":"2022-09-20T16:27:07.000Z","updatedAt":"2022-09-20T16:27:07.000Z"}

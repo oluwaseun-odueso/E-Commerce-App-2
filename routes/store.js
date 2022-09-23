@@ -7,7 +7,7 @@ const {
     updateStore,
     deleteStore, 
     // getAllStores
-} = require('../controllers/storeControllers.js')
+} = require('../controllers/storeController')
 
 router.post('/create_store', verifySellerToken, createStore)
 router.get('/get_store/:id', verifySellerToken, getStore)

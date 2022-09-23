@@ -6,7 +6,7 @@ const {
     getUserOrder,
     deleteUserOrder,
     updateOrderProduct
-} = require('../controllers/orderControllers')
+} = require('../controllers/orderController')
 
 router.post('/add_order', verifyUserToken, addUserOrder)
 router.get('/get_order', verifyUserToken, getUserOrder)
