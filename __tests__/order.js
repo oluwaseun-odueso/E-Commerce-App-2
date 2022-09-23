@@ -53,6 +53,19 @@ describe('POST /order/add_order', () => {
         expect(response.statusCode).toBe(400);
     })
 
+    test('When user does not add quantity for a product', async() => {
+        const response = await request(app)
+        .post('/order/add_order')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            product_ids: [1, 2, 8], 
+            product_quantities: [1, 2]
+        })        
+        expect(response.body.message).toBe("Order must contain at least one quantity for selected product(s)")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+
     test('When user order quantity for product exceeds quantity in stock', async() => {
         const response = await request(app)
         .post('/order/add_order')
