@@ -13,7 +13,6 @@ const {
     getPriceForQuantitiesOrdered,
     checkIfAllProductsHaveQuantities
 } = require('../functions/orderFunctions')
-const { get } = require('../routes/user')
 
 const addUserOrder = async(req, res) => {
     if (req.body.product_ids && req.body.product_quantities) {
@@ -92,9 +91,8 @@ const updateOrderProduct = async(req, res) => {
 
 const getUserOrder = async(req, res) => {
     try {
-        const order = await getOrder(req.user.id)
-        if (! order) {
-            res.status(400).send({message: "You don't have an order"})
+        if (! await getOrder(req.user.id)) {
+            res.status(400).send({message: "You do not have an order"})
             return
         }
         res.status(200).send({message: "Your order", order})
