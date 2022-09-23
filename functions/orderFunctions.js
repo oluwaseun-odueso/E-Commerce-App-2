@@ -75,15 +75,21 @@ async function getProductIdsForUserOrder(user_id) {
     }
 }
 
+async function updateUserOrder(user_id, product_ids, product_quantities, price, total) {
+    try {
+        const updateOrderDetails =  await Order.update({product_ids, product_quantities, price, total}, {
+            where: {user_id}
+        })
+        return updateOrderDetails
+    } catch (error) {
+        return error
+    }
+}
+
 function convertProductIdsFromDatabaseToArray(ids) {
     const idArray = ids.split`,`.map(x=>+x)
     return idArray
 }
-
-// function checkIfIdsExistsInUserOrder(deleteProductIds, currentIds) {
-//     console.log(deleteProductIds.every(item => currentIds.includes(item)))
-//     return deleteProductIds.every(item => currentIds.includes(item))
-// }
 
 function checkIfIdsExistsInUserOrder(deleteProductIds, currentIds) {
     for (let i = 0; i < deleteProductIds.length; i++) {
@@ -93,28 +99,22 @@ function checkIfIdsExistsInUserOrder(deleteProductIds, currentIds) {
     }
 }
 
-async function checkIfUserHasOrder(user_id) {
-    try {
-        const order = await Order.findOne({
-            where: {user_id}
-        })
-        return order
-    } catch (error) {
-        return error
-    }
+function checkIfAllProductsHaveQuantities(product_ids, product_quantities) {
+    return product_ids.length == product_quantities.length
 }
 
 const orderRoutesFunctions = {
     createOrder,
     getOrder, 
     deleteOrder,
+    updateUserOrder,
     getProductsPrices,
     getPriceForQuantitiesOrdered,
     getProductIdsForUserOrder,
     getTotalPrice,
-    checkIfUserHasOrder,
     checkIfIdsExistsInUserOrder,
-    convertProductIdsFromDatabaseToArray
+    convertProductIdsFromDatabaseToArray,
+    checkIfAllProductsHaveQuantities
 }
 
 module.exports = orderRoutesFunctions
