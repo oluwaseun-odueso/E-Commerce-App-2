@@ -14,7 +14,7 @@ beforeAll(async () => {
   });
 
 describe('POST /order/add_order', () => {
-    test('Successfully add product to order', async() => {
+    test('Successfully create order', async() => {
         const response = await request(app)
         .post('/order/add_order')
         .set('Authorization', `Bearer ${token}`)
@@ -40,7 +40,7 @@ describe('POST /order/add_order', () => {
         expect(response.statusCode).toBe(400);
     })
 
-    test.only('When user adds non-existing product to order', async() => {
+    test('When user adds non-existing product to order', async() => {
         const response = await request(app)
         .post('/order/add_order')
         .set('Authorization', `Bearer ${token}`)
@@ -53,7 +53,7 @@ describe('POST /order/add_order', () => {
         expect(response.statusCode).toBe(400);
     })
 
-    test.only('When user order quantity for product exceeds quantity in stock', async() => {
+    test('When user order quantity for product exceeds quantity in stock', async() => {
         const response = await request(app)
         .post('/order/add_order')
         .set('Authorization', `Bearer ${token}`)
@@ -66,7 +66,7 @@ describe('POST /order/add_order', () => {
         expect(response.statusCode).toBe(400);
     })
 
-    test.only('When user sends an empty order request', async() => {
+    test('When user sends an empty order request', async() => {
         const response = await request(app)
         .post('/order/add_order')
         .set('Authorization', `Bearer ${token}`)
@@ -78,7 +78,7 @@ describe('POST /order/add_order', () => {
 })
 
 describe('GET /order/get_order', () => {
-    test("Get user's order", async() => {
+    test("When user has an order", async() => {
         const response = await request(app)
         .get('/order/get_order')
         .set('Authorization', `Bearer ${token}`)
@@ -87,13 +87,13 @@ describe('GET /order/get_order', () => {
         expect(response.statusCode).toBe(200);
     })
 
-    test("Get user's order", async() => {
+    test("When user does not have an order", async() => {
         const response = await request(app)
         .get('/order/get_order')
         .set('Authorization', `Bearer ${token}`)
-        expect(response.body.message).not.toBe("You don't have an order")
+        expect(response.body.message).toBe("You don't have an order")
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
-        expect(response.statusCode).toBe(200);
+        expect(response.statusCode).toBe(400);
     })
 })
 
@@ -107,11 +107,88 @@ describe('DELETE /order/delete_order', () => {
         expect(response.statusCode).toBe(400);
     })
 
-    test('When user has an order', async() => {
+    test('When user successfully deletes their order', async() => {
         const response = await request(app)
         .delete('/order/delete_order')
         .set('Authorization', `Bearer ${token}`)
-        expect(response.body.message).not.toBe("Your order has been deleted")
+        expect(response.body.message).toBe("Your order has been deleted")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+})
+
+describe('PUT /order/update_order_product', () => {
+    test('When user has no order', async() => {
+        const response = await request(app)
+        .put('/order/update_order_product')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            product_ids: [1, 2, 8], 
+            product_quantities: [1, 2, 1]
+        })        
+        expect(response.body.message).toBe("You don't have an order")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+
+    test("When user includes a product that doesn't exist", async() => {
+        const response = await request(app)
+        .put('/order/update_order_product')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            product_ids: [1, 2, 20], 
+            product_quantities: [1, 2, 1]
+        })        
+        expect(response.body.message).toBe("Product with id 20 does not exist")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+
+    test("When user does not select at least one quantity for a product", async() => {
+        const response = await request(app)
+        .put('/order/update_order_product')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            product_ids: [1, 2, 8], 
+            product_quantities: [1, 2]
+        })        
+        expect(response.body.message).toBe("Order must contain at least one quantity for selected product(s)")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+
+    test("When user selects quantity higher than quantity in stock for a product", async() => {
+        const response = await request(app)
+        .put('/order/update_order_product')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            product_ids: [1, 2, 8], 
+            product_quantities: [1, 2, 800]
+        })        
+        expect(response.body.message).toBe("Tampon order quantity higher than quantity in stock")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(400);
+    })
+
+    test("When user successfully updates their order", async() => {
+        const response = await request(app)
+        .put('/order/update_order_product')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            product_ids: [1, 2, 8], 
+            product_quantities: [1, 2, 1]
+        })        
+        expect(response.body.message).toBe("Order updated")
+        expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
+        expect(response.statusCode).toBe(200);
+    })
+
+    test("When user sends no order update detail", async() => {
+        const response = await request(app)
+        .put('/order/update_order_product')
+        .set('Authorization', `Bearer ${token}`)
+        .send({})        
+        expect(response.body.message).toBe("Please enter all fields")
         expect(response.headers['content-type']).toEqual(expect.stringContaining('json'));
         expect(response.statusCode).toBe(400);
     })

@@ -85,7 +85,7 @@ const updateOrderProduct = async(req, res) => {
 
             await updateUserOrder(req.user.id, product_ids.toString(), product_quantities.toString(), price.toString(), total)
             const order = await getOrder(req.user.id)
-            res.status(201).send({message: "Order updated", order})
+            res.status(200).send({message: "Order updated", order})
         } catch (error) { res.status(400).send({message: error.message}) }
     } else res.status(400).json({ errno: "101", message: "Please enter all fields" })
 }
