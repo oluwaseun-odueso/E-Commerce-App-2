@@ -32,7 +32,7 @@ const getPaymentTransaction = async(req, res) => {
     try {
         const payment = await getAPayment(req.params.id)
         if (! payment) {
-            res.status(400).send({message: "No payment for order"})
+            res.status(400).send({message: "No payment made for an order"})
             return
         }
         res.status(200).send({message: 'Order payment details', payment})
