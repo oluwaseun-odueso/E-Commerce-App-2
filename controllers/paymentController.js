@@ -2,7 +2,8 @@ const {
     getOrder
 } = require('../functions/orderFunctions')
 const {
-    createData
+    createData,
+    savePayment
 } = require('../functions/paymentFunctions')
 const Payment = require('../utils/paystackPayments')
 
@@ -13,9 +14,14 @@ const initiatePayment = async(req, res) => {
             res.status(400).send({message: "You do not have an order to pay for, create an order to make payment."})
             return
         }
-        const data = createData(order)
-        // console.log(order.dataValues.payment_status)
-        // res.status(200).send(order)
+        const data = await createData(order)
+        console.log(data)
+
+        const orderPayment = await Payment.initializeTransaction(data)
+        console.log(orderPayment.authorization_url, orderPayment.reference)
+        await savePayment(req.user.id, order.dataValues.id, order.dataValues.total, order.dataValues.payment_status)
+        res.status(201).send({message: "Kindly pay through the link below", link: orderPayment.authorization_url})
+
     } catch (error) {
         res.status(400).send({message: error.message})
     }

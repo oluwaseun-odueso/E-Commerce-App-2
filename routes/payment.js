@@ -7,6 +7,6 @@ const {
     initiatePayment
 } = require('../controllers/paymentController')
 
-router.post('/initialize_payment', verifyUserToken, initiatePayment)
+router.post('/pay_for_order', verifyUserToken, initiatePayment)
 
 module.exports = router

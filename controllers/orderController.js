@@ -91,7 +91,8 @@ const updateOrderProduct = async(req, res) => {
 
 const getUserOrder = async(req, res) => {
     try {
-        if (! await getOrder(req.user.id)) {
+        const order = await getOrder(req.user.id)
+        if (! order) {
             res.status(400).send({message: "You do not have an order"})
             return
         }
