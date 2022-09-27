@@ -29,9 +29,22 @@ async function savePayment(user_id, order_id, amount, payment_status) {
     }
 }
 
+async function getAPayment(id) {
+    try {
+        const payment = await Payment.findOne({
+            attributes: {exclude: ['updatedAt']},
+            where: {id}
+        })
+        return payment
+    } catch (error) {
+        return error
+    }
+}
+
 const  paymentRoutesFunctions = {
     createData,
-    savePayment
+    savePayment,
+    getAPayment
 }
 
 module.exports = paymentRoutesFunctions

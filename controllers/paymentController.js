@@ -3,7 +3,8 @@ const {
 } = require('../functions/orderFunctions')
 const {
     createData,
-    savePayment
+    savePayment,
+    getAPayment
 } = require('../functions/paymentFunctions')
 const Payment = require('../utils/paystackPayments')
 
@@ -27,8 +28,22 @@ const initiatePayment = async(req, res) => {
     }
 }
 
+const getPaymentTransaction = async(req, res) => {
+    try {
+        const payment = await getAPayment(req.params.id)
+        if (! payment) {
+            res.status(400).send({message: "No payment for order"})
+            return
+        }
+        res.status(200).send({message: 'Order payment details', payment})
+    } catch (error) {
+        res.status(400).send({message: error.message})
+    }
+}
+
 const controllers = {
-    initiatePayment
+    initiatePayment,
+    getPaymentTransaction
 }
 
 module.exports = controllers
