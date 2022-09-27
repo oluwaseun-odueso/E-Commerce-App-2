@@ -12,7 +12,7 @@ const initiatePayment = async(req, res) => {
     try {
         const order = await getOrder(req.user.id)
         if (! order) {
-            res.status(400).send({message: "You do not have an order to pay for, create an order to make payment."})
+            res.status(400).send({message: "Create an order to make payment"})
             return
         }
         const data = await createData(order)

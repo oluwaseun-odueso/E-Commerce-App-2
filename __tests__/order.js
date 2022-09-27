@@ -3,7 +3,6 @@ const app = require('../app')
 
 let token ;
 
-
 beforeAll(async () => {
     const response = await request(app).post('/user/login')
     .send({

@@ -6,7 +6,8 @@
       "user.js",
       "seller.js",
       "store.js",
-      "product.js"
+      "product.js",
+      "order.js"
     ]
   },
   "version": "1.0.0",
