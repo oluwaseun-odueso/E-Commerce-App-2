@@ -14,6 +14,9 @@ module.exports = {
       order_id: {
         type: Sequelize.INTEGER
       },
+      reference: {
+        type: Sequelize.STRING
+      },
       amount: {
         type: Sequelize.INTEGER
       },

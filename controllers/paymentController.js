@@ -20,7 +20,7 @@ const initiatePayment = async(req, res) => {
 
         const orderPayment = await Payment.initializeTransaction(data)
         console.log(orderPayment.authorization_url, orderPayment.reference)
-        await savePayment(req.user.id, order.dataValues.id, order.dataValues.total, "pending")
+        await savePayment(req.user.id, order.dataValues.id, orderPayment.reference, order.dataValues.total, "pending")
         res.status(201).send({message: "Kindly pay through the link below", link: orderPayment.authorization_url})
 
     } catch (error) {
@@ -41,9 +41,26 @@ const getPaymentTransaction = async(req, res) => {
     }
 }
 
+const updatePayment = async(req, res) => {
+    try {
+        if (req.headers['x-paystack-signature'] == 'unom') {
+            const event = req.body
+            if (event.event == "charge.success") {
+                await updateOrderPaymentStatus(event.reference)
+                res.status(200)
+            }
+        }
+        res.send(200);
+        res.status(200).send({message: "Successful"})
+    } catch (error) {
+        res.status(400).send({message: error.message})
+    }
+}
+
 const controllers = {
     initiatePayment,
-    getPaymentTransaction
+    getPaymentTransaction,
+    updatePayment
 }
 
 module.exports = controllers

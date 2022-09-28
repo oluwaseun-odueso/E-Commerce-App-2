@@ -20,9 +20,9 @@ async function createData(order) {
     }
 }
 
-async function savePayment(user_id, order_id, amount, payment_status) {
+async function savePayment(user_id, order_id, reference, amount, payment_status) {
     try {
-        const newPaymentRecord = await Payment.create({user_id, order_id, amount, payment_status}) 
+        const newPaymentRecord = await Payment.create({user_id, order_id, reference, amount, payment_status}) 
         return newPaymentRecord
     } catch (error) {
         return error
