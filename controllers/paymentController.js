@@ -4,7 +4,8 @@ const {
 const {
     createData,
     savePayment,
-    getAPayment
+    getAPayment,
+    updateOrderPaymentStatus
 } = require('../functions/paymentFunctions')
 const Payment = require('../utils/paystackPayments')
 
@@ -46,12 +47,12 @@ const updatePayment = async(req, res) => {
         if (req.headers['x-paystack-signature'] == 'unom') {
             const event = req.body
             if (event.event == "charge.success") {
-                await updateOrderPaymentStatus(event.reference)
-                res.status(200)
+                await updateOrderPaymentStatus(event.data.reference, "paid")
+                res.status(200).send({message: "Payment sucessful"})
+                return
             }
         }
         res.send(200);
-        res.status(200).send({message: "Successful"})
     } catch (error) {
         res.status(400).send({message: error.message})
     }
