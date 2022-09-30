@@ -1,10 +1,12 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config()
 
-const sequelize = new Sequelize(process.env.SQ_DATABASE, process.env.SQ_USER, process.env.SQ_PASSWORD, {
-    host: process.env.SQ_HOST,
-    dialect: 'mysql'
-});
+const sequelize = new Sequelize(process.env.PROD_CONNECTION_URI)
+
+// const sequelize = new Sequelize(process.env.SQ_DATABASE, process.env.SQ_USER, process.env.SQ_PASSWORD, {
+//     host: process.env.SQ_HOST,
+//     dialect: 'mysql'
+// });
 
 sequelize.authenticate()
     .then(() => console.log('Connection has been established successfully.'))

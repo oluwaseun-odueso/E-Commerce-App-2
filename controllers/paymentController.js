@@ -1,3 +1,6 @@
+const crypto = require('crypto')
+require('dotenv').config()
+const secret = process.env.PAYSTACK_TOKEN;
 const {
     getOrder
 } = require('../functions/orderFunctions')
@@ -44,15 +47,18 @@ const getPaymentTransaction = async(req, res) => {
 
 const updatePayment = async(req, res) => {
     try {
-        if (req.headers['x-paystack-signature'] == 'unom') {
+        const hash = crypto.createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
+        console.log(hash)
+        if (hash == req.headers['x-paystack-signature']) {
             const event = req.body
+            console.log(event)
             if (event.event == "charge.success") {
                 await updateOrderPaymentStatus(event.data.reference, "paid")
                 res.status(200).send({message: "Payment sucessful"})
                 return
             }
         }
-        res.send(200);
+        res.status(200).send("Payment failed");
     } catch (error) {
         res.status(400).send({message: error.message})
     }
