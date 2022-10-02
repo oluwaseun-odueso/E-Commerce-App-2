@@ -14,10 +14,10 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": "animalHumanBeingCaramel100#",
-    "database": "e-commerce",
-    "host": "127.0.0.1",
+    "username": "bd86b8811cc417",
+    "password": "3551eac0",
+    "database": "heroku_4852edc51f17c0f",
+    "host": "us-cdbr-east-06.cleardb.net",
     "dialect": "mysql"
   }
 }
