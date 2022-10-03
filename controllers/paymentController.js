@@ -25,7 +25,7 @@ const initiatePayment = async(req, res) => {
         const orderPayment = await Payment.initializeTransaction(data)
         console.log(orderPayment.authorization_url, orderPayment.reference)
         await savePayment(req.user.id, order.dataValues.id, orderPayment.reference, order.dataValues.total, "pending")
-        res.status(201).send({message: "Kindly pay through the link below", reference: orderPayment.reference, link: orderPayment.authorization_url})
+        res.status(201).send({message: "Kindly pay through the link below", link: orderPayment.authorization_url})
 
     } catch (error) {
         res.status(400).send({message: error.message})

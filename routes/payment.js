@@ -11,6 +11,6 @@ const {
 
 router.post('/pay_for_order', verifyUserToken, initiatePayment)
 router.get('/view_payment/:id', verifyUserToken, getPaymentTransaction)
-router.post('/webhook/update_payment_status', updatePayment)
+router.post('/webhook/update_payment_status', verifyUserToken, updatePayment)
 
 module.exports = router
