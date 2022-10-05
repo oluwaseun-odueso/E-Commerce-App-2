@@ -35,7 +35,6 @@ router.post('/upload_image', upload.single('image'), async (req, res)=>{
     try {
         const file = req.file
         const result = await uploadFile(file)
-        console.log(result.Key)
         await unlinkFile(file.path)
         res.status(200).send({message: "Profile picture successfully uploaded", immage_path: `/upload_image/${result.Key}`})
     } catch (error) {
