@@ -1,4 +1,4 @@
-const {uploadFile, getFile} = require('./s3')
+const {uploadFile, getFile, deleteFile} = require('./s3')
 const fs = require('fs')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
@@ -24,9 +24,20 @@ const uploadImage = async(req, res) => {
     }
 }
 
+const deleteImage = async(req, res) => {
+    try {
+        const key = req.params.key
+        await deleteFile(key)
+        res.status(200).send({message: "Image deleted successfully"})
+    } catch (error) {
+        res.status(400).send({message: error.message})
+    }
+}
+
 const controllers = {
     getImage,
-    uploadImage
+    uploadImage,
+    deleteImage
 }
 
 module.exports = controllers

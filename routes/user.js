@@ -6,6 +6,7 @@ const router = express.Router()
 const {
     getImage,
     uploadImage,
+    deleteImage
 } = require('../images/imageController')
 
 const {verifyUserToken} = require('../auth/jwtAuth')
@@ -25,5 +26,6 @@ router.delete('/delete_account', verifyUserToken, deleteAccount)
 router.get('/get_account', verifyUserToken, getUserAccount)
 router.get('/get_image/:key', getImage)
 router.post('/upload_image', verifyUserToken, upload.single('image'), uploadImage)
+router.delete('/delete_image/:key', verifyUserToken, deleteImage)
 
 module.exports = router

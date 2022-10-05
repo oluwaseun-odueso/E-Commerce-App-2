@@ -33,9 +33,22 @@ function getFile(fileKey) {
     return s3.getObject(downloadParams).createReadStream()
 }
 
+async function deleteFile(fileKey) {
+    const deleteParams = {
+        Key: fileKey,
+        Bucket: bucketName
+    }
+    return s3.deleteObject(deleteParams).promise()
+    // s3.deleteObject(deleteParams, (err, data) => {
+    //     if (data) return "Image deleted successfully"
+    //     else return "Could not delete image" + err
+    // })
+}
+
 const imageFunctions = {
     uploadFile,
-    getFile
+    getFile,
+    deleteFile
 }
 
 module.exports = imageFunctions
