@@ -4,9 +4,9 @@ const bcrypt = require('bcrypt')
 const sequelize = require('../config/database')
 const Seller = sellerModel(sequelize, DataTypes)
 
-async function createSeller(firstName, lastName, email, password, store_id, phone_number, address) {
+async function createSeller(first_name, last_name, email, password, store_id, phone_number, address) {
     try {
-        const sellerDetails = {firstName, lastName, email, password, store_id, phone_number, address}
+        const sellerDetails = {first_name, last_name, email, password, store_id, phone_number, address}
         const seller = await Seller.create(sellerDetails)
         return seller
     } catch (error) {
@@ -93,9 +93,9 @@ async function checkIfEnteredPasswordEqualsHashed(password, hashedPW) {
     }
 }
 
-async function updateSellerAccountDetails(id, firstName, lastName, email, store_id, phone_number, address) {
+async function updateSellerAccountDetails(id, first_name, last_name, email, store_id, phone_number, address) {
     try {
-        const updated = await Seller.update({firstName, lastName, email, store_id, phone_number, address}, {
+        const updated = await Seller.update({first_name, last_name, email, store_id, phone_number, address}, {
             where: { id }
         })
         return updated

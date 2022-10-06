@@ -5,7 +5,8 @@ const router = express.Router()
 
 const {
     getImage,
-    uploadImage
+    uploadImage,
+    deleteImage
 } = require('../images/imageController')
 
 const {verifySellerToken} = require('../auth/jwtAuth')
@@ -27,5 +28,6 @@ router.delete('/delete_account', verifySellerToken, deleteSellerAccount)
 router.get('/get_sellers', verifySellerToken, getAllSellersAccounts)
 router.get('/get_image/:key', getImage)
 router.post('/upload_image', verifySellerToken, upload.single('image'), uploadImage)
+router.delete('/delete_image/:key', verifySellerToken, deleteImage)
 
 module.exports = router

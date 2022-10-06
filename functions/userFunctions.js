@@ -40,7 +40,7 @@ async function checkPhoneNumber(phone_number) {
 async function getUserById(id) {
     try {
         const details = await User.findOne({
-            attributes: {exclude: ['password']},
+            attributes: {exclude: ['password', 'image_key']},
             where: {id}
         });
         return details
@@ -62,7 +62,7 @@ async function hashUserPassword(password) {
 async function getUserByEmail(email) {
     try {
         const result = await User.findOne({
-            attributes: { exclude: ['password']},
+            attributes: { exclude: ['password' ,'image_key']},
             where: { email }
           });
 
@@ -108,6 +108,29 @@ async function updateAccountDetails(id, first_name, last_name, email, phone_numb
     }
 }
 
+async function saveImageKey(id, image_key) {
+    try {
+        const updated = await User.update({image_key}, {
+            where: { id }
+        })
+        return updated
+    } catch (error) {
+        return error
+    }
+}
+
+async function getUserImageKey (id) {
+    try {
+        const key = await User.findOne({
+            attributes: ['image_key'],
+            where: { id }
+        })
+        return key
+    } catch (error) {
+        return error
+    }
+}
+
 async function deleteUserAccount(id) {
     try {
         const deleted = await User.destroy({
@@ -139,6 +162,8 @@ const userRoutesFunctions = {
     checkPhoneNumber,
     checkIfEntriesMatch,
     hashUserPassword,
+    saveImageKey,
+    getUserImageKey,
     collectEmailHashedPassword,
     updateAccountDetails,
     deleteUserAccount,

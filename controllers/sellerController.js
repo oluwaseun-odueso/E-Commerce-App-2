@@ -15,8 +15,8 @@ const {
 } = require('../functions/sellerFunctions')
 
 const signupSeller = async (req, res) => {
-    if (req.body.firstName && req.body.lastName && req.body.email &&req.body.password && req.body.store_id && req.body.phone_number && req.body.address) {
-        const {firstName, lastName, email, password, store_id, phone_number, address} = req.body
+    if (req.body.first_name && req.body.last_name && req.body.email &&req.body.password && req.body.store_id && req.body.phone_number && req.body.address) {
+        const {first_name, last_name, email, password, store_id, phone_number, address} = req.body
         try {
             if (await checkEmail(email)) { res.status(400).send({message: "Email already exists"})
             return
@@ -25,7 +25,7 @@ const signupSeller = async (req, res) => {
                 return
             }
             const hashedPassword = await hashSellerPassword(password)
-            await createSeller(firstName, lastName, email, hashedPassword, store_id, phone_number, address)
+            await createSeller(first_name, last_name, email, hashedPassword, store_id, phone_number, address)
             const seller = await getSellerByEmail(email)
             res.status(201).send({message: "Seller account created", seller})
         } catch (error) { res.status(400).send({message: error.message}) }
@@ -84,8 +84,8 @@ const getAllSellersAccounts = async function (res) {
 }
 
 const updateSellerAccount = async (req, res) => {
-    if (req.body.firstName && req.body.lastName && req.body.email && req.body.store_id && req.body.address && req.body.phone_number) {
-        const {firstName, lastName, email, phone_number, address, store_id} = req.body
+    if (req.body.first_name && req.body.last_name && req.body.email && req.body.store_id && req.body.address && req.body.phone_number) {
+        const {first_name, last_name, email, phone_number, address, store_id} = req.body
         const seller = await getSellerById(req.seller.id)
         try {
             if ( await checkEmail (email) && ! checkIfEntriesMatch(seller.email, email)) {
@@ -96,7 +96,7 @@ const updateSellerAccount = async (req, res) => {
                 res.status(400).send({message: "Phone number already exists"})
                 return
             }
-            await updateSellerAccountDetails(req.seller.id, firstName, lastName, email, store_id, phone_number, address)
+            await updateSellerAccountDetails(req.seller.id, first_name, last_name, email, store_id, phone_number, address)
             const updated = await getSellerById(req.seller.id)
             res.status(200).send({message: 'Account details updated', updated})
         } catch (error) { res.status(400).send({message: error.message}) }
