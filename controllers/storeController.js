@@ -1,3 +1,8 @@
+const {uploadFile} = require('../images/s3')
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
+
 const {
     createAStore,
     checkStoreName,
@@ -5,7 +10,8 @@ const {
     updateStoreDetails,
     checkIfEntriesMatch,
     deleteAStore,
-    checkIfSellerHasStore
+    checkIfSellerHasStore,
+    saveStoreImageKey
 } = require('../functions/storeFunctions')
 
 const createStore = async(req, res) => {
@@ -70,11 +76,24 @@ const deleteStore = async(req, res) => {
     } catch (error) { res.send({message : error.message}) }
 }
 
+const uploadStoreImage = async(req, res) => {
+    try {
+        const file = req.file
+        const result = await uploadFile(file)
+        await unlinkFile(file.path)
+        await saveStoreImageKey(req.params.id, result.Key)
+        res.status(200).send({message: "Store image uploaded successfully"})
+    } catch (error) {
+        res.status(400).send({message: error.message})
+    }
+}
+
 const controllers = {
     createStore, 
     getStore, 
     updateStore, 
-    deleteStore
+    deleteStore,
+    uploadStoreImage
 }
 
 module.exports = controllers

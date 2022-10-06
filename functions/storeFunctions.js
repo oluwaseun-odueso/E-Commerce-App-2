@@ -61,23 +61,23 @@ async function deleteAStore(id, seller_id) {
     }
 }
 
-// async function getStores(seller_id) {
-//     try {
-//         const allStores = await Store.findAll({
-//             where: { seller_id }
-//         })
-//         return allStores
-//     } catch (error) {
-//         return error
-//     }
-// }
-
 async function checkIfSellerHasStore(seller_id) {
     try {
         const store = await Store.findOne({
             where: {seller_id}
         })
         return store
+    } catch (error) {
+        return error
+    }
+}
+
+async function saveStoreImageKey(id, image_key) {
+    try {
+        const updated = await Store.update({image_key}, {
+            where: { id }
+        })
+        return updated
     } catch (error) {
         return error
     }
@@ -90,8 +90,8 @@ const storeRoutesFunctions = {
     updateStoreDetails,
     checkIfEntriesMatch,
     deleteAStore,
-    // getStores,
-    checkIfSellerHasStore
+    checkIfSellerHasStore,
+    saveStoreImageKey
 }
 
 module.exports = storeRoutesFunctions

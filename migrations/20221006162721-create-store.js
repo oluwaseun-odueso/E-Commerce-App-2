@@ -9,17 +9,16 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        unique: true,
-        allowNull: false,
         type: Sequelize.STRING
       },
       address: {
-        allowNull: false,
         type: Sequelize.STRING
       },
       seller_id: {
-        allowNull: false,
         type: Sequelize.INTEGER
+      },
+      image_key: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
