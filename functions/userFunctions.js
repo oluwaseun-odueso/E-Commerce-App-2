@@ -108,7 +108,7 @@ async function updateAccountDetails(id, first_name, last_name, email, phone_numb
     }
 }
 
-async function saveImageKey(id, image_key) {
+async function saveUserImageKey(id, image_key) {
     try {
         const updated = await User.update({image_key}, {
             where: { id }
@@ -162,7 +162,7 @@ const userRoutesFunctions = {
     checkPhoneNumber,
     checkIfEntriesMatch,
     hashUserPassword,
-    saveImageKey,
+    saveUserImageKey,
     getUserImageKey,
     collectEmailHashedPassword,
     updateAccountDetails,

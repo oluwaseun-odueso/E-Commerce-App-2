@@ -1,3 +1,8 @@
+const {uploadFile} = require('../images/s3')
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
+
 const { generateToken } = require('../auth/jwtAuth')
 const {
     createSeller, 
@@ -9,6 +14,7 @@ const {
     deleteSeller,
     hashSellerPassword,
     checkIfEntriesMatch,
+    saveSellerImageKey,
     collectEmailHashedPassword,
     updateSellerAccountDetails,
     checkIfEnteredPasswordEqualsHashed
@@ -114,6 +120,26 @@ const deleteSellerAccount = async(req, res) => {
     } catch (error) { res.status(400).send({message: error.message}) }
 }
 
-const controllers = {signupSeller, loginSeller, getSellerAccount, updateSellerAccount, deleteSellerAccount, getAllSellersAccounts}
+const uploadSellerImage = async(req, res) => {
+    try {
+        const file = req.file
+        const result = await uploadFile(file)
+        await unlinkFile(file.path)
+        await saveSellerImageKey(req.seller.id, result.Key)
+        res.status(200).send({message: "Picture uploaded successfully"})
+    } catch (error) {
+        res.status(400).send({message: error.message})
+    }
+}
+
+const controllers = {
+    signupSeller, 
+    loginSeller, 
+    getSellerAccount, 
+    updateSellerAccount, 
+    deleteSellerAccount, 
+    getAllSellersAccounts,
+    uploadSellerImage
+}
 
 module.exports = controllers

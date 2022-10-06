@@ -142,6 +142,17 @@ async function getSellerStoreID(id) {
     }
 }
 
+async function saveSellerImageKey(id, image_key) {
+    try {
+        const updated = await Seller.update({image_key}, {
+            where: { id }
+        })
+        return updated
+    } catch (error) {
+        return error
+    }
+}
+
 const sellerRoutesFunctions = {
     createSeller, 
     checkEmail, 
@@ -152,6 +163,7 @@ const sellerRoutesFunctions = {
     hashSellerPassword,
     deleteSeller,
     checkIfEntriesMatch, 
+    saveSellerImageKey,
     collectEmailHashedPassword, 
     updateSellerAccountDetails,
     checkIfEnteredPasswordEqualsHashed,

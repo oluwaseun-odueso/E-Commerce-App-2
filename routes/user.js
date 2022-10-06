@@ -5,7 +5,6 @@ const router = express.Router()
 
 const {
     getImage,
-    uploadImage,
     deleteImage
 } = require('../images/imageController')
 

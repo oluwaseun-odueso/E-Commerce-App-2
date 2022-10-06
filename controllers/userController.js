@@ -1,4 +1,4 @@
-const {uploadFile, getFile, deleteFile} = require('../images/s3')
+const {uploadFile} = require('../images/s3')
 const fs = require('fs')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
@@ -14,7 +14,7 @@ const {
     getUserById, 
     getUserByEmail,
     getAllUsers,
-    saveImageKey,
+    saveUserImageKey,
     collectEmailHashedPassword,
     updateAccountDetails,
     checkIfEnteredPasswordEqualsHashed
@@ -128,7 +128,7 @@ const uploadUserImage = async(req, res) => {
         const file = req.file
         const result = await uploadFile(file)
         await unlinkFile(file.path)
-        await saveImageKey(req.user.id, result.Key)
+        await saveUserImageKey(req.user.id, result.Key)
         res.status(200).send({message: "Picture uploaded successfully"})
     } catch (error) {
         res.status(400).send({message: error.message})
