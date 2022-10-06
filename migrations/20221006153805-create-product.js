@@ -9,23 +9,22 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       product_description: {
-        allowNull: false,
         type: Sequelize.STRING
       },
       price: {
-        allowNull: false,
         type: Sequelize.INTEGER
       },
       quantity_in_stock: {
         type: Sequelize.INTEGER
       },
       store_id: {
-        allowNull: false,
         type: Sequelize.INTEGER
       },
       seller_id: {
-        allowNull: false,
         type: Sequelize.INTEGER
+      },
+      image_key: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

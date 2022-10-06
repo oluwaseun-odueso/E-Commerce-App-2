@@ -1,3 +1,8 @@
+const {uploadFile} = require('../images/s3')
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
+
 const {getSellerStoreID} = require('../functions/sellerFunctions')
 const {
     createProduct,
@@ -5,7 +10,8 @@ const {
     getProductById,
     getProducts,
     updateProductDetails,
-    deleteAProduct
+    deleteAProduct,
+    saveProductImageKey
 } = require('../functions/productFunctions')
 const { checkIfEntriesMatch } = require('../functions/storeFunctions')
 
@@ -79,6 +85,25 @@ const deleteProduct = async (req, res) => {
     } catch (error) { res.status(400).send({message: error.message}) }
 }
 
-const productControllers = {addProduct, getProduct, getAllProducts, updateProduct, deleteProduct}
+const uploadProductImage = async(req, res) => {
+    try {
+        const file = req.file
+        const result = await uploadFile(file)
+        await unlinkFile(file.path)
+        await saveProductImageKey(req.params.id, result.Key)
+        res.status(200).send({message: "Product picture uploaded successfully"})
+    } catch (error) {
+        res.status(400).send({message: error.message})
+    }
+}
+
+const productControllers = {
+    addProduct, 
+    getProduct, 
+    getAllProducts, 
+    updateProduct, 
+    deleteProduct, 
+    uploadProductImage
+}
 
 module.exports = productControllers

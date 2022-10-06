@@ -129,7 +129,7 @@ const uploadUserImage = async(req, res) => {
         const result = await uploadFile(file)
         await unlinkFile(file.path)
         await saveUserImageKey(req.user.id, result.Key)
-        res.status(200).send({message: "Picture uploaded successfully"})
+        res.status(200).send({message: "Profile picture uploaded successfully"})
     } catch (error) {
         res.status(400).send({message: error.message})
     }

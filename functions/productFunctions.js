@@ -93,6 +93,17 @@ async function deleteAProduct(id, seller_id) {
     }
 }
 
+async function saveProductImageKey(id, image_key) {
+    try {
+        const updated = await Product.update({image_key}, {
+            where: { id }
+        })
+        return updated
+    } catch (error) {
+        return error
+    }
+}
+
 const productRoutesFunctions = {   
     createProduct,
     checkProductDescription,
@@ -101,7 +112,8 @@ const productRoutesFunctions = {
     updateProductDetails,
     deleteAProduct,
     checkIfProductsExist,
-    checkProductOrderQuantity
+    checkProductOrderQuantity,
+    saveProductImageKey
 }
 
 module.exports = productRoutesFunctions
