@@ -1,21 +1,24 @@
-const {uploadFile} = require('../images/s3')
+const {uploadFile, deleteFile} = require('../images/s3')
 const fs = require('fs')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
 
-const {updateSellerStoreId} = require('../functions/sellerFunctions')
+const {updateSellerStoreId, saveSellerImageKey} = require('../functions/sellerFunctions')
 
 const {
     createAStore,
     checkStoreName,
     getStoreById,
     getStoreIdByStoreName,
+    getStoreIdBySellerId,
     updateStoreDetails,
     checkIfEntriesMatch,
     deleteAStore,
     checkIfSellerHasStore,
-    saveStoreImageKey
+    saveStoreImageKey,
+    getStoreImageKey
 } = require('../functions/storeFunctions')
+const store = require('../models/store')
 
 const createStore = async(req, res) => {
     if ( req.body.name && req.body.address ) {
@@ -87,8 +90,25 @@ const uploadStoreImage = async(req, res) => {
         const file = req.file
         const result = await uploadFile(file)
         await unlinkFile(file.path)
-        await saveStoreImageKey(req.params.id, result.Key)
+        const store_id = await getStoreIdBySellerId(req.seller.id)
+        await saveStoreImageKey(store_id, result.Key)
         res.status(200).send({message: "Store image uploaded successfully"})
+    } catch (error) {
+        res.status(400).send({message: error.message})
+    }
+}
+
+const deleteStoreImage = async(req, res) => {
+    try {
+        const store_id = await getStoreIdBySellerId(req.seller.id)
+        const key = await getStoreImageKey(store_id)
+        if (key == "") {
+            res.status(400).send({message: "Store does not have a display picture"})
+            return
+        }
+        await deleteFile(key)
+        await saveStoreImageKey(store_id, '')
+        res.status(200).send({message: "Image deleted successfully"})
     } catch (error) {
         res.status(400).send({message: error.message})
     }
@@ -99,7 +119,8 @@ const controllers = {
     getStore, 
     updateStore, 
     deleteStore,
-    uploadStoreImage
+    uploadStoreImage,
+    deleteStoreImage
 }
 
 module.exports = controllers

@@ -46,6 +46,17 @@ async function getStoreIdByStoreName(name) {
     }
 }
 
+async function getStoreIdBySellerId(seller_id) {
+    try {
+        const storeId = await Store.findOne({
+            where: { seller_id }
+        })
+        return storeId.dataValues.id
+    } catch (error) {
+        return error
+    }
+}
+
 async function updateStoreDetails(id, seller_id, name, address) {
     try {
         const updatedStore = await Store.update({name, address}, {
@@ -94,16 +105,30 @@ async function saveStoreImageKey(id, image_key) {
     }
 }
 
+async function getStoreImageKey (id) {
+    try {
+        const key = await Store.findOne({
+            attributes: ['image_key'],
+            where: { id }
+        })
+        return key.dataValues.image_key
+    } catch (error) {
+        return error
+    }
+}
+
 const storeRoutesFunctions = {
     createAStore,
     checkStoreName,
     getStoreById,
     getStoreIdByStoreName,
+    getStoreIdBySellerId,
     updateStoreDetails,
     checkIfEntriesMatch,
     deleteAStore,
     checkIfSellerHasStore,
-    saveStoreImageKey
+    saveStoreImageKey,
+    getStoreImageKey
 }
 
 module.exports = storeRoutesFunctions

@@ -5,7 +5,6 @@ const router = express.Router()
 
 const {
     getImage,
-    deleteImage
 } = require('../images/imageController')
 
 const {verifySellerToken} = require('../auth/jwtAuth')
