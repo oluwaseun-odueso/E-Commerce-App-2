@@ -2,7 +2,6 @@ const {DataTypes} = require('sequelize')
 const paymentModel = require('../models/payment')
 const sequelize = require('../config/database')
 const { getUserById } = require('./userFunctions')
-const user = require('../models/user')
 const Payment = paymentModel(sequelize, DataTypes)
 
 async function createData(order) {

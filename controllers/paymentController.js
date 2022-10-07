@@ -20,10 +20,7 @@ const initiatePayment = async(req, res) => {
             return
         }
         const data = await createData(order)
-        console.log(data)
-
         const orderPayment = await Payment.initializeTransaction(data)
-        console.log(orderPayment.authorization_url, orderPayment.reference)
         await savePayment(req.user.id, order.dataValues.id, orderPayment.reference, order.dataValues.total, "pending")
         res.status(201).send({message: "Kindly pay through the link below", reference: orderPayment.reference, link: orderPayment.authorization_url})
 
@@ -48,10 +45,8 @@ const getPaymentTransaction = async(req, res) => {
 const updatePayment = async(req, res) => {
     try {
         const hash = crypto.createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
-        console.log(hash)
         if (hash == req.headers['x-paystack-signature']) {
             const event = req.body
-            console.log(event)
             if (event.event == "charge.success") {
                 await updateOrderPaymentStatus(event.data.reference, "paid")
                 res.status(200).send({message: "Payment sucessful"})
