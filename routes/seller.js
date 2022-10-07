@@ -17,7 +17,8 @@ const {
     updateSellerAccount, 
     deleteSellerAccount, 
     getAllSellersAccounts,
-    uploadSellerImage
+    uploadSellerImage,
+    deleteSellerImage
 } = require('../controllers/sellerController')
 
 router.post('/signup', signupSeller)
@@ -28,6 +29,6 @@ router.delete('/delete_account', verifySellerToken, deleteSellerAccount)
 router.get('/get_sellers', verifySellerToken, getAllSellersAccounts)
 router.get('/get_image/:key', getImage)
 router.post('/upload_image', verifySellerToken, upload.single('image'), uploadSellerImage)
-router.delete('/delete_image/:key', verifySellerToken, deleteImage)
+router.delete('/delete_image', verifySellerToken, deleteSellerImage)
 
 module.exports = router

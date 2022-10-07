@@ -17,7 +17,6 @@ const {
     getUserAccount,
     uploadUserImage,
     deleteUserImage,
-    getUserImage
 } = require('../controllers/userController')
 
 router.post('/signup', signUpUser)

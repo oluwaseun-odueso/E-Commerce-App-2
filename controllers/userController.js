@@ -154,7 +154,7 @@ const deleteUserImage = async(req, res) => {
     try {
         const key = await getUserImageKey(req.user.id)
         if (key == "") {
-            res.status(400).send({message: "You don't have a profile picture"})
+            res.status(400).send({message: "You do not have a profile picture"})
             return
         }
         await deleteFile(key)

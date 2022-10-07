@@ -39,10 +39,6 @@ async function deleteFile(fileKey) {
         Bucket: bucketName
     }
     return s3.deleteObject(deleteParams).promise()
-    // s3.deleteObject(deleteParams, (err, data) => {
-    //     if (data) return "Image deleted successfully"
-    //     else return "Could not delete image" + err
-    // })
 }
 
 const imageFunctions = {

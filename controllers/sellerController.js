@@ -1,4 +1,4 @@
-const {uploadFile} = require('../images/s3')
+const {uploadFile, deleteFile} = require('../images/s3')
 const fs = require('fs')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
@@ -15,6 +15,7 @@ const {
     hashSellerPassword,
     checkIfEntriesMatch,
     saveSellerImageKey,
+    getSellerImageKey,
     collectEmailHashedPassword,
     updateSellerAccountDetails,
     checkIfEnteredPasswordEqualsHashed
@@ -131,6 +132,21 @@ const uploadSellerImage = async(req, res) => {
     }
 }
 
+const deleteSellerImage = async(req, res) => {
+    try {
+        const key = await getSellerImageKey(req.seller.id)
+        if (key == "") {
+            res.status(400).send({message: "You do not have a profile picture"})
+            return
+        }
+        await deleteFile(key)
+        await saveSellerImageKey(req.seller.id, '')
+        res.status(200).send({message: "Image deleted successfully"})
+    } catch (error) {
+        res.status(400).send({message: error.message})
+    }
+}
+
 const controllers = {
     signupSeller, 
     loginSeller, 
@@ -138,7 +154,8 @@ const controllers = {
     updateSellerAccount, 
     deleteSellerAccount, 
     getAllSellersAccounts,
-    uploadSellerImage
+    uploadSellerImage,
+    deleteSellerImage
 }
 
 module.exports = controllers

@@ -164,6 +164,19 @@ async function saveSellerImageKey(id, image_key) {
     }
 }
 
+
+async function getSellerImageKey (id) {
+    try {
+        const key = await Seller.findOne({
+            attributes: ['image_key'],
+            where: { id }
+        })
+        return key.dataValues.image_key
+    } catch (error) {
+        return error
+    }
+}
+
 const sellerRoutesFunctions = {
     createSeller, 
     checkEmail, 
@@ -175,6 +188,7 @@ const sellerRoutesFunctions = {
     deleteSeller,
     checkIfEntriesMatch, 
     saveSellerImageKey,
+    getSellerImageKey,
     collectEmailHashedPassword, 
     updateSellerAccountDetails,
     updateSellerStoreId,
