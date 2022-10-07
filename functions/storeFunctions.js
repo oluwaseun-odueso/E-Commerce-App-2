@@ -35,6 +35,17 @@ async function getStoreById(id, seller_id) {
     }
 }
 
+async function getStoreIdByStoreName(name) {
+    try {
+        const storeId = await Store.findOne({
+            where: { name }
+        })
+        return storeId.dataValues.id
+    } catch (error) {
+        return error
+    }
+}
+
 async function updateStoreDetails(id, seller_id, name, address) {
     try {
         const updatedStore = await Store.update({name, address}, {
@@ -87,6 +98,7 @@ const storeRoutesFunctions = {
     createAStore,
     checkStoreName,
     getStoreById,
+    getStoreIdByStoreName,
     updateStoreDetails,
     checkIfEntriesMatch,
     deleteAStore,

@@ -3,10 +3,13 @@ const fs = require('fs')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
 
+const {updateSellerStoreId} = require('../functions/sellerFunctions')
+
 const {
     createAStore,
     checkStoreName,
     getStoreById,
+    getStoreIdByStoreName,
     updateStoreDetails,
     checkIfEntriesMatch,
     deleteAStore,
@@ -26,7 +29,10 @@ const createStore = async(req, res) => {
                 res.status(400).send({message: "Shop already exists"}) 
                 return
             }
+
             const store = await createAStore(req.seller.id, name, address)
+            const store_id = await getStoreIdByStoreName(name)
+            await updateSellerStoreId(req.seller.id, store_id)
             res.status(201).send({ message : "Store created", store})
         } catch (error) { res.status(400).send({message: error.message}) }
     } else { res.status(400).json({ errno: "101", message: "Please enter all fields" }) }

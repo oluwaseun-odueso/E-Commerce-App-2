@@ -1,4 +1,4 @@
-const {uploadFile} = require('../images/s3')
+const {uploadFile, getFile, deleteFile} = require('../images/s3')
 const fs = require('fs')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
@@ -15,6 +15,7 @@ const {
     getUserByEmail,
     getAllUsers,
     saveUserImageKey,
+    getUserImageKey,
     collectEmailHashedPassword,
     updateAccountDetails,
     checkIfEnteredPasswordEqualsHashed
@@ -135,12 +136,43 @@ const uploadUserImage = async(req, res) => {
     }
 }
 
+const getUserImage = async(req, res) => {
+    try {
+        const key = await getUserImageKey(req.user.id)
+        if (key == "") {
+            res.status(400).send({message: "You don't have a profile picture"})
+            return
+        }
+        const readStream = getFile(key)
+        readStream.pipe(res)
+    } catch (error) {
+        res.status(400).send({message: error.message})
+    }
+}
+
+const deleteUserImage = async(req, res) => {
+    try {
+        const key = await getUserImageKey(req.user.id)
+        if (key == "") {
+            res.status(400).send({message: "You don't have a profile picture"})
+            return
+        }
+        await deleteFile(key)
+        await saveUserImageKey(req.user.id, '')
+        res.status(200).send({message: "Image deleted successfully"})
+    } catch (error) {
+        res.status(400).send({message: error.message})
+    }
+}
+
 const userControllers = {
     signUpUser, loginUser, 
     updateUserAccount, 
     deleteAccount, 
     getUserAccount,
     uploadUserImage,
+    deleteUserImage,
+    getUserImage
 }
 
 module.exports = userControllers

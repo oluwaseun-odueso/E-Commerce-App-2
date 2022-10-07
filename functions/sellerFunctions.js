@@ -104,6 +104,17 @@ async function updateSellerAccountDetails(id, first_name, last_name, email, stor
     }
 }
 
+async function updateSellerStoreId(id, store_id) {
+    try {
+        const updatedStoreId = await Seller.update({store_id}, {
+            where: { id }
+        })
+        return updatedStoreId
+    } catch (error) {
+        return error
+    }
+}
+
 function checkIfEntriesMatch(a, b) {
     return a === b
 }
@@ -130,13 +141,13 @@ async function getAllSellers() {
     }
 }
 
-async function getSellerStoreID(id) {
+async function getSellerStoreId(id) {
     try {
-        const storeID = Seller.findOne({
+        const storeId = Seller.findOne({
             attributes: ['store_id'],
             where: { id }
         })
-        return storeID
+        return storeId
     } catch (error) {
         return error
     }
@@ -166,8 +177,9 @@ const sellerRoutesFunctions = {
     saveSellerImageKey,
     collectEmailHashedPassword, 
     updateSellerAccountDetails,
+    updateSellerStoreId,
     checkIfEnteredPasswordEqualsHashed,
-    getSellerStoreID
+    getSellerStoreId
 }
 
 module.exports = sellerRoutesFunctions

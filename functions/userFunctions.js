@@ -125,7 +125,7 @@ async function getUserImageKey (id) {
             attributes: ['image_key'],
             where: { id }
         })
-        return key
+        return key.dataValues.image_key
     } catch (error) {
         return error
     }

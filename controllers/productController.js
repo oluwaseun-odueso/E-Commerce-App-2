@@ -3,7 +3,7 @@ const fs = require('fs')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
 
-const {getSellerStoreID} = require('../functions/sellerFunctions')
+const {getSellerStoreId} = require('../functions/sellerFunctions')
 const {
     createProduct,
     checkProductDescription,
@@ -19,7 +19,7 @@ const addProduct = async (req, res) => {
     if (req.body.product_description && req.body.price && req.body.quantity_in_stock) {
         const {product_description, price, quantity_in_stock} = req.body
         try {
-            const storeId = await getSellerStoreID(req.seller.id)
+            const storeId = await getSellerStoreId(req.seller.id)
             const store_id = JSON.parse(JSON.stringify(storeId)).store_id
             if (await checkProductDescription(product_description)) {
                 res.status(400).send({message: "Product name already exists"}) 
