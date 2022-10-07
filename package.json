@@ -14,7 +14,7 @@
   "description": "E-Commerce App",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "node app.js"
   },
   "author": "Oluwaseun",
   "license": "ISC",
